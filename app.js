@@ -4,11 +4,14 @@ let leftLogoFile = null;
 let rightLogoFile = null;
 let selectedAnimation = 'pop';
 
-// ==================== Elements ====================
-const formView = document.getElementById('form-view');
-const loadingView = document.getElementById('loading-view');
-const successView = document.getElementById('success-view');
-const errorView = document.getElementById('error-view');
+// ==================== UI View Elements ====================
+const uploadState = document.getElementById('upload-state');
+const loadingState = document.getElementById('loading-state');
+const successState = document.getElementById('success-state');
+const errorState = document.getElementById('error-state');
+
+// ==================== Form Elements ====================
+const formControls = document.getElementById('form-controls');
 const submitBtn = document.getElementById('submit-btn');
 const progressMsg = document.getElementById('progress-msg');
 const errorMsg = document.getElementById('error-msg');
@@ -22,21 +25,17 @@ apiUrlInput.addEventListener('input', function() {
   localStorage.setItem('rekaption_api_url', this.value);
 });
 
-// ==================== Audio Input ====================
+// ==================== Audio Dropzone Handling ====================
 const audioInput = document.getElementById('audio-input');
 const audioDropzone = document.getElementById('audio-dropzone');
 const audioLabel = document.getElementById('audio-label');
 
 audioInput.addEventListener('change', function() {
   if (this.files && this.files[0]) {
-    audioFile = this.files[0];
-    audioLabel.textContent = audioFile.name;
-    audioDropzone.classList.add('active');
-    submitBtn.disabled = false;
+    handleAudioSelect(this.files[0]);
   }
 });
 
-// Drag & drop support
 audioDropzone.addEventListener('dragover', function(e) {
   e.preventDefault();
   this.classList.add('active');
@@ -47,15 +46,19 @@ audioDropzone.addEventListener('dragleave', function() {
 audioDropzone.addEventListener('drop', function(e) {
   e.preventDefault();
   if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-    audioFile = e.dataTransfer.files[0];
+    handleAudioSelect(e.dataTransfer.files[0]);
     audioInput.files = e.dataTransfer.files;
-    audioLabel.textContent = audioFile.name;
-    this.classList.add('active');
-    submitBtn.disabled = false;
   }
 });
 
-// ==================== Logo Inputs ====================
+function handleAudioSelect(file) {
+  audioFile = file;
+  audioLabel.textContent = file.name;
+  audioDropzone.classList.add('active');
+  submitBtn.disabled = false;
+}
+
+// ==================== Logo Upload & Preview Handling ====================
 const leftLogoInput = document.getElementById('left-logo-input');
 const rightLogoInput = document.getElementById('right-logo-input');
 const leftLogoContent = document.getElementById('left-logo-content');
@@ -78,31 +81,37 @@ rightLogoInput.addEventListener('change', function() {
 function showLogoPreview(container, file, side) {
   const url = URL.createObjectURL(file);
   container.innerHTML = `
-    <img src="${url}" class="logo-preview" alt="${side} logo" />
-    <button class="logo-clear" onclick="event.stopPropagation(); clearLogo('${side}')">&times;</button>
+    <img src="${url}" class="preview-thumbnail" alt="${side} logo preview" />
+    <button type="button" class="clear-btn" onclick="event.stopPropagation(); clearLogo('${side}')">&times;</button>
   `;
 }
 
-function clearLogo(side) {
+window.clearLogo = function(side) {
   if (side === 'left') {
     leftLogoFile = null;
     leftLogoInput.value = '';
-    leftLogoContent.innerHTML = '<span style="font-size:24px">🖼️</span><p class="logo-label">شعار أعلى اليسار</p>';
+    leftLogoContent.innerHTML = `
+      <span class="file-box-icon">🖼️</span>
+      <span class="file-box-text">شعار أعلى اليسار</span>
+    `;
   } else {
     rightLogoFile = null;
     rightLogoInput.value = '';
-    rightLogoContent.innerHTML = '<span style="font-size:24px">🖼️</span><p class="logo-label">شعار أعلى اليمين</p>';
+    rightLogoContent.innerHTML = `
+      <span class="file-box-icon">🖼️</span>
+      <span class="file-box-text">شعار أعلى اليمين</span>
+    `;
   }
-}
+};
 
-// ==================== Animation Selection ====================
-function selectAnimation(el) {
+// ==================== Animation Styles Selection ====================
+window.selectAnimation = function(el) {
   document.querySelectorAll('.anim-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedAnimation = el.dataset.anim;
-}
+};
 
-// ==================== Color Pickers ====================
+// ==================== Color Pickers Casing ====================
 document.getElementById('active-color').addEventListener('input', function() {
   document.getElementById('active-color-hex').textContent = this.value.toUpperCase();
 });
@@ -110,55 +119,64 @@ document.getElementById('inactive-color').addEventListener('input', function() {
   document.getElementById('inactive-color-hex').textContent = this.value.toUpperCase();
 });
 
-// ==================== Advanced Panel ====================
-function toggleAdvanced() {
+// ==================== Advanced Settings panel toggler ====================
+window.toggleAdvanced = function() {
   const panel = document.getElementById('advanced-panel');
   panel.classList.toggle('hidden');
+};
+
+// ==================== View State Managers ====================
+function showState(visibleElement) {
+  [uploadState, loadingState, successState, errorState].forEach(el => {
+    el.classList.add('hidden');
+  });
+  visibleElement.classList.remove('hidden');
 }
 
-// ==================== View Management ====================
-function showView(view) {
-  formView.classList.add('hidden');
-  loadingView.classList.add('hidden');
-  successView.classList.add('hidden');
-  errorView.classList.add('hidden');
-  view.classList.remove('hidden');
-}
+window.resetApp = function() {
+  // Clear file states
+  audioFile = null;
+  audioInput.value = '';
+  audioLabel.textContent = 'قم بسحب ملف الصوت هنا أو انقر للاختيار';
+  audioDropzone.classList.remove('active');
+  submitBtn.disabled = true;
+  
+  clearLogo('left');
+  clearLogo('right');
+  
+  showState(uploadState);
+};
 
-function resetForm() {
-  showView(formView);
-}
-
-// ==================== Form Submit ====================
-document.getElementById('form-view').addEventListener('submit', async function(e) {
+// ==================== Form submission & API handling ====================
+formControls.addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const apiUrl = apiUrlInput.value.replace(/\/+$/, '');
   if (!apiUrl) {
-    showView(errorView);
-    errorMsg.textContent = 'يرجى إدخال رابط الباك إند في الإعدادات المتقدمة أولاً!';
+    showState(errorState);
+    errorMsg.textContent = 'يرجى إدخال رابط الباك إند في الإعدادات المتقدمة أولاً لتوجيه الطلبات!';
     return;
   }
 
   if (!audioFile) {
-    showView(errorView);
-    errorMsg.textContent = 'يرجى اختيار ملف صوتي أولاً!';
+    showState(errorState);
+    errorMsg.textContent = 'يرجى اختيار ملف صوتي أولاً لتوليد المقطع!';
     return;
   }
 
-  showView(loadingView);
-  progressMsg.textContent = 'جاري تحميل الملفات وتجهيز الطلب...';
+  showState(loadingState);
+  progressMsg.textContent = 'جاري رفع الملفات وتجهيز الطلب...';
 
-  // Simulated progress messages
+  // Simulated progress messages for render lifecycle
   const stages = [
     { time: 3000, msg: 'جاري تفريغ الصوت وتحليل التوقيت بالذكاء الاصطناعي (Whisper)...' },
     { time: 15000, msg: 'جاري تشغيل محرك الرندرة (Headless Chrome)...' },
-    { time: 30000, msg: 'جاري دمج الصوت والمؤثرات البصرية...' },
-    { time: 45000, msg: 'جاري التصدير النهائي وضغط ملف الـ MP4...' },
+    { time: 32000, msg: 'جاري دمج الصوت والمؤثرات البصرية وتنسيق الكابشن...' },
+    { time: 48000, msg: 'جاري التصدير النهائي وضغط ملف الـ MP4...' },
   ];
   const timers = stages.map(s => setTimeout(() => { progressMsg.textContent = s.msg; }, s.time));
 
-  // Build FormData
+  // Build FormData payload
   const fd = new FormData();
   fd.append('audio', audioFile);
   if (leftLogoFile) fd.append('leftLogo', leftLogoFile);
@@ -178,7 +196,7 @@ document.getElementById('form-view').addEventListener('submit', async function(e
     timers.forEach(t => clearTimeout(t));
 
     if (!res.ok) {
-      let detail = 'خطأ غير معروف من السيرفر';
+      let detail = 'حدث خطأ في معالجة الفيديو في السيرفر';
       try {
         const json = await res.json();
         detail = json.detail || detail;
@@ -186,17 +204,17 @@ document.getElementById('form-view').addEventListener('submit', async function(e
       throw new Error(detail);
     }
 
-    progressMsg.textContent = 'جاري تحميل الفيديو الناتج...';
+    progressMsg.textContent = 'جاري تنزيل الفيديو المكتمل...';
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
 
     outputVideo.src = url;
     downloadLink.href = url;
-    showView(successView);
+    showState(successState);
 
   } catch (err) {
     timers.forEach(t => clearTimeout(t));
-    showView(errorView);
-    errorMsg.textContent = err.message || 'فشل الاتصال بالسيرفر. تحقق من رابط الـ API.';
+    showState(errorState);
+    errorMsg.textContent = err.message || 'فشل الاتصال بالسيرفر. يرجى التحقق من تشغيل السيرفر أو الرابط.';
   }
 });

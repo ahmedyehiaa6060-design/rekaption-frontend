@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="تطبيق ReKaption لتوليد مقاطع فيديو احترافية بكابشن تفاعلي متحرك باستخدام الذكاء الاصطناعي." />
   <title>ReKaption | توليد كابشن تلقائي احترافي للفيديو</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -15,147 +17,176 @@
     <!-- Header -->
     <header id="header">
       <h1 id="title">ReKaption</h1>
-      <p id="subtitle">حوّل ملفاتك الصوتية إلى مقاطع فيديو احترافية بكابشن تفاعلي</p>
+      <p id="subtitle">حوّل مقاطعك الصوتية إلى فيديوهات احترافية بكابشن تفاعلي ومؤثرات بصرية</p>
     </header>
 
-    <!-- Main Card -->
-    <main id="main-card" class="card">
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- LEFT PANEL: CUSTOMIZATION CONTROLS -->
+      <form id="form-controls" class="panel">
+        <h2 class="panel-title">إعدادات الكابشن والمظهر</h2>
 
-      <!-- FORM VIEW -->
-      <form id="form-view">
-
-        <!-- 1. Audio Upload -->
-        <div class="section">
-          <label class="section-label">1. ارفع الملف الصوتي</label>
-          <div id="audio-dropzone" class="dropzone" onclick="document.getElementById('audio-input').click()">
-            <input type="file" id="audio-input" accept="audio/*" style="display:none" />
-            <span class="dropzone-icon">🎙️</span>
-            <p id="audio-label" class="dropzone-text">اسحب ملف الصوت هنا أو انقر للاختيار</p>
-            <p class="dropzone-hint">يدعم صيغ MP3, WAV, M4A وغيرها</p>
-          </div>
-        </div>
-
-        <!-- 2. Logos -->
-        <div class="section">
-          <label class="section-label">2. الشعارات (اختياري)</label>
+        <!-- Logos -->
+        <div class="form-section">
+          <label class="form-label">الشعارات (اختياري)</label>
           <div class="grid-2">
-            <div class="logo-box" onclick="document.getElementById('left-logo-input').click()">
+            <div class="file-upload-box" onclick="document.getElementById('left-logo-input').click()">
               <input type="file" id="left-logo-input" accept="image/*" style="display:none" />
-              <div id="left-logo-content">
-                <span style="font-size:24px">🖼️</span>
-                <p class="logo-label">شعار أعلى اليسار</p>
+              <div id="left-logo-content" class="file-box-content">
+                <span class="file-box-icon">🖼️</span>
+                <span class="file-box-text">شعار أعلى اليسار</span>
               </div>
             </div>
-            <div class="logo-box" onclick="document.getElementById('right-logo-input').click()">
+            <div class="file-upload-box" onclick="document.getElementById('right-logo-input').click()">
               <input type="file" id="right-logo-input" accept="image/*" style="display:none" />
-              <div id="right-logo-content">
-                <span style="font-size:24px">🖼️</span>
-                <p class="logo-label">شعار أعلى اليمين</p>
+              <div id="right-logo-content" class="file-box-content">
+                <span class="file-box-icon">🖼️</span>
+                <span class="file-box-text">شعار أعلى اليمين</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 3. Animation Style -->
-        <div class="section">
-          <label class="section-label">3. حركة الكابشن</label>
+        <!-- Animation Style -->
+        <div class="form-section">
+          <label class="form-label">حركة الكابشن</label>
           <div class="grid-3">
             <div class="anim-card selected" data-anim="pop" onclick="selectAnimation(this)">
-              <span>💥</span>
-              <strong>Pop</strong>
-              <small>نص يقفز تدريجياً</small>
+              <span class="anim-icon">💥</span>
+              <span class="anim-name">Pop</span>
+              <span class="anim-desc">نص يقفز تدريجياً</span>
             </div>
             <div class="anim-card" data-anim="wave" onclick="selectAnimation(this)">
-              <span>🌊</span>
-              <strong>Wave</strong>
-              <small>توهج كلمة تلو الأخرى</small>
+              <span class="anim-icon">🌊</span>
+              <span class="anim-name">Wave</span>
+              <span class="anim-desc">توهج كلمة تلو الأخرى</span>
             </div>
             <div class="anim-card" data-anim="slide" onclick="selectAnimation(this)">
-              <span>🚀</span>
-              <strong>Slide</strong>
-              <small>تتحرك الجمل للأعلى</small>
+              <span class="anim-icon">🚀</span>
+              <span class="anim-name">Slide</span>
+              <span class="anim-desc">تتحرك الجمل للأعلى</span>
             </div>
           </div>
         </div>
 
-        <!-- 4. Colors & Words -->
-        <div class="section">
-          <label class="section-label">4. الألوان وعدد الكلمات</label>
+        <!-- Colors & Words Limits -->
+        <div class="form-section">
+          <label class="form-label">تنسيق النصوص والألوان</label>
+          <div class="grid-2" style="margin-bottom:15px">
+            <div class="control-field">
+              <span class="control-label">الكلمة النشطة</span>
+              <div class="color-input-wrapper">
+                <div class="color-circle-preview">
+                  <input type="color" id="active-color" value="#FFDE4D" />
+                </div>
+                <span id="active-color-hex" class="color-hex-text">#FFDE4D</span>
+              </div>
+            </div>
+            <div class="control-field">
+              <span class="control-label">باقي الكلمات</span>
+              <div class="color-input-wrapper">
+                <div class="color-circle-preview">
+                  <input type="color" id="inactive-color" value="#FFFFFF" />
+                </div>
+                <span id="inactive-color-hex" class="color-hex-text">#FFFFFF</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="grid-2">
-            <div class="field">
-              <label class="field-label">لون الكلمة النشطة</label>
-              <div class="color-row">
-                <input type="color" id="active-color" value="#FFDE4D" />
-                <span id="active-color-hex">#FFDE4D</span>
-              </div>
-            </div>
-            <div class="field">
-              <label class="field-label">لون الكلمات الأخرى</label>
-              <div class="color-row">
-                <input type="color" id="inactive-color" value="#FFFFFF" />
-                <span id="inactive-color-hex">#FFFFFF</span>
-              </div>
-            </div>
-            <div class="field">
-              <label class="field-label">الحد الأدنى للكلمات</label>
+            <div class="control-field">
+              <span class="control-label">الحد الأدنى للكلمات/السطر</span>
               <input type="number" id="min-words" value="3" min="1" max="10" />
             </div>
-            <div class="field">
-              <label class="field-label">الحد الأقصى للكلمات</label>
+            <div class="control-field">
+              <span class="control-label">الحد الأقصى للكلمات/السطر</span>
               <input type="number" id="max-words" value="5" min="1" max="15" />
             </div>
           </div>
         </div>
 
-        <!-- Submit -->
-        <button type="submit" id="submit-btn" class="btn" disabled>
+        <!-- Submit Button -->
+        <button type="submit" id="submit-btn" class="btn-primary" disabled>
           <span>🚀</span> توليد الفيديو النهائي
         </button>
       </form>
 
-      <!-- LOADING VIEW -->
-      <div id="loading-view" class="hidden center-view">
-        <div class="spinner"></div>
-        <h3>جاري معالجة الفيديو...</h3>
-        <p id="progress-msg" class="muted">جاري تحميل الملفات وتجهيز الطلب...</p>
-        <div class="note-box">
-          ملاحظة: قد تستغرق المعالجة من دقيقة إلى دقيقتين. يرجى عدم إغلاق الصفحة.
+      <!-- RIGHT PANEL: UPLOAD & RENDER RESULTS -->
+      <div class="panel">
+        <h2 class="panel-title">معالجة الفيديو</h2>
+
+        <!-- 1. UPLOAD STATE -->
+        <div id="upload-state">
+          <div id="audio-dropzone" class="dropzone" onclick="document.getElementById('audio-input').click()">
+            <input type="file" id="audio-input" accept="audio/*" style="display:none" />
+            
+            <!-- Styled SVG Icon instead of emoji -->
+            <svg class="dropzone-icon-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+            </svg>
+            
+            <p id="audio-label" class="dropzone-text">قم بسحب ملف الصوت هنا أو انقر للاختيار</p>
+            <p class="dropzone-hint">يدعم ملفات MP3, WAV, M4A حتى 5 دقائق</p>
+          </div>
         </div>
-      </div>
 
-      <!-- SUCCESS VIEW -->
-      <div id="success-view" class="hidden center-view">
-        <span style="font-size:48px">🎉</span>
-        <h2 class="success-title">تم رندرة الفيديو بنجاح!</h2>
-        <p class="muted">يمكنك تشغيل الفيديو أو تحميله مباشرة</p>
-        <div class="video-container">
-          <video id="output-video" controls></video>
+        <!-- 2. LOADING STATE -->
+        <div id="loading-state" class="hidden center-view">
+          <div class="spinner"></div>
+          <h3 class="status-title">جاري معالجة مقطعك...</h3>
+          <p id="progress-msg" class="status-desc">جاري رفع الملفات وتحليل الصوت بالذكاء الاصطناعي...</p>
+          <div class="note-box" style="margin-top: 20px;">
+            ملاحظة: الرندرة والذكاء الاصطناعي يعملان على خادم Hugging Face مجاني بالكامل، يرجى الانتظار حتى الانتهاء.
+          </div>
         </div>
-        <a id="download-link" class="btn" download="rekaption_video.mp4">
-          <span>⬇️</span> تحميل الفيديو
-        </a>
-        <button class="btn-secondary" onclick="resetForm()">صناعة فيديو جديد 🔄</button>
+
+        <!-- 3. SUCCESS STATE -->
+        <div id="success-state" class="hidden center-view">
+          <span style="font-size:40px">🎉</span>
+          <h3 class="status-title" style="color:var(--success)">تم إنشاء الفيديو بنجاح!</h3>
+          <p class="status-desc">جاهز للتشغيل والتحميل</p>
+          
+          <div class="video-frame">
+            <video id="output-video" controls></video>
+          </div>
+          
+          <a id="download-link" class="btn-primary" download="rekaption_output.mp4" style="margin-bottom:12px">
+            <span>⬇️</span> تحميل مقطع الفيديو
+          </a>
+          
+          <button class="btn-secondary" onclick="resetApp()">
+            صناعة فيديو جديد 🔄
+          </button>
+        </div>
+
+        <!-- 4. ERROR STATE -->
+        <div id="error-state" class="hidden center-view">
+          <span style="font-size:40px;color:var(--error)">⚠️</span>
+          <h3 class="status-title" style="color:var(--error)">فشلت العملية</h3>
+          <p id="error-msg" class="status-desc"></p>
+          <button class="btn-secondary" onclick="resetApp()" style="margin-top:15px">
+            الرجوع للمحاولة 🔄
+          </button>
+        </div>
+
       </div>
 
-      <!-- ERROR VIEW -->
-      <div id="error-view" class="hidden center-view">
-        <span style="font-size:48px">⚠️</span>
-        <h2 style="color:#f87171">حدث خطأ</h2>
-        <p id="error-msg" class="muted"></p>
-        <button class="btn" onclick="resetForm()">المحاولة مرة أخرى</button>
-      </div>
-
-    </main>
-
-    <!-- Advanced Settings -->
-    <div id="advanced-toggle" style="text-align:center;margin-top:20px">
-      <button class="link-btn" onclick="toggleAdvanced()">عرض الإعدادات المتقدمة ⚙️</button>
     </div>
-    <div id="advanced-panel" class="card hidden" style="margin-top:15px;padding:20px">
-      <label class="field-label">رابط خادم الباك إند (Backend API URL):</label>
+
+    <!-- Advanced Settings Collapsible -->
+    <div style="text-align:center;margin-top:30px">
+      <button class="btn-link" onclick="toggleAdvanced()">عرض الإعدادات المتقدمة ⚙️</button>
+    </div>
+    
+    <div id="advanced-panel" class="advanced-card hidden">
+      <label class="control-label" style="display:block;margin-bottom:8px">رابط خادم الباك إند (Backend API URL):</label>
       <input type="text" id="api-url" placeholder="https://username-rekaption.hf.space" style="direction:ltr;text-align:left;font-family:monospace" />
-      <small class="muted" style="display:block;margin-top:6px">ضع رابط Hugging Face Space الخاص بك هنا</small>
+      <span style="font-size:11px;color:var(--text-muted);display:block;margin-top:6px">
+        ضع رابط Hugging Face Space الخاص بك هنا (سينتهي بـ .hf.space) ليتم توجيه الطلبات إليه.
+      </span>
     </div>
+
   </div>
 
   <script src="app.js"></script>
