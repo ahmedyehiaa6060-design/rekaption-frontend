@@ -137,7 +137,7 @@ window.resetApp = function() {
   // Clear file states
   audioFile = null;
   audioInput.value = '';
-  audioLabel.textContent = 'قم بسحب ملف الصوت هنا أو انقر للاختيار';
+  audioLabel.textContent = 'قم بسحب ملف الصوت أو الفيديو هنا أو انقر للاختيار';
   audioDropzone.classList.remove('active');
   submitBtn.disabled = true;
   
@@ -160,7 +160,7 @@ formControls.addEventListener('submit', async function(e) {
 
   if (!audioFile) {
     showState(errorState);
-    errorMsg.textContent = 'يرجى اختيار ملف صوتي أولاً لتوليد المقطع!';
+    errorMsg.textContent = 'يرجى اختيار ملف صوت أو فيديو أولاً لتوليد المقطع!';
     return;
   }
 
@@ -171,7 +171,7 @@ formControls.addEventListener('submit', async function(e) {
   const stages = [
     { time: 3000, msg: 'جاري تفريغ الصوت وتحليل التوقيت بالذكاء الاصطناعي (Whisper)...' },
     { time: 15000, msg: 'جاري تشغيل محرك الرندرة (Headless Chrome)...' },
-    { time: 32000, msg: 'جاري دمج الصوت والمؤثرات البصرية وتنسيق الكابشن...' },
+    { time: 32000, msg: 'جاري دمج الكابشن والمؤثرات البصرية...' },
     { time: 48000, msg: 'جاري التصدير النهائي وضغط ملف الـ MP4...' },
   ];
   const timers = stages.map(s => setTimeout(() => { progressMsg.textContent = s.msg; }, s.time));
