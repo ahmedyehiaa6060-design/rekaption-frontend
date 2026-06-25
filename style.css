@@ -527,8 +527,59 @@ input[type="number"]:focus, input[type="text"]:focus {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: sticky;
-  top: 20px;
+}
+
+/* Floating Picture-in-Picture Preview */
+.preview-media-wrapper.floating-preview {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 200px;
+  aspect-ratio: 9/16;
+  z-index: 9999;
+  border: 2px solid var(--purple-accent);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  animation: floatIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0; /* Override center margin */
+  background: #000;
+}
+
+.preview-media-wrapper.floating-preview.audio-mode {
+  aspect-ratio: 16/9;
+  width: 280px;
+}
+
+/* Float preview title badge */
+.preview-media-wrapper.floating-preview::before {
+  content: "معاينة عائمة 📺";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(168, 85, 247, 0.85);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 100px;
+  z-index: 20;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+@keyframes floatIn {
+  from {
+    transform: translateY(60px) scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 .workspace-right {

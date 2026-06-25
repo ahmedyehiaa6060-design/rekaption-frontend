@@ -217,20 +217,22 @@ function initMediaPlayer() {
     `;
   }
   
-  // Add the Live Caption Overlay container
+  // Add the Live Caption Overlay container (Centered, dynamically wrapping the text)
   mediaHtml += `
     <div id="live-caption-overlay" class="hidden" style="
       position: absolute;
       bottom: ${transcribeData.videoPath ? '60px' : 'auto'};
       top: ${transcribeData.videoPath ? 'auto' : '15px'};
-      left: 12px;
-      right: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 90%;
       background: rgba(10, 8, 20, 0.85);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 14px;
-      padding: 10px 14px;
+      padding: 8px 16px;
       text-align: center;
       pointer-events: none;
       z-index: 10;
@@ -257,11 +259,15 @@ function initMediaPlayer() {
 function updateActiveSegment(time) {
   if (!transcribeData) return;
   
-  currentTime = time;
+  // Apply the syncOffset to the player's time for the caption overlay!
+  const syncOffset = parseFloat(document.getElementById('sync-offset').value) || 0;
+  const adjustedTime = time + syncOffset;
+  
+  currentTime = adjustedTime;
   let newActiveIndex = -1;
   for (let i = 0; i < transcribeData.segments.length; i++) {
     const seg = transcribeData.segments[i];
-    if (time >= seg.start && time <= seg.end) {
+    if (adjustedTime >= seg.start && adjustedTime <= seg.end) {
       newActiveIndex = i;
       break;
     }
@@ -281,8 +287,8 @@ function updateActiveSegment(time) {
     });
   }
   
-  // Update live caption overlay
-  updateLiveCaptionOverlay(time);
+  // Update live caption overlay with adjusted time
+  updateLiveCaptionOverlay(adjustedTime);
 }
 
 function updateLiveCaptionOverlay(time) {
@@ -595,3 +601,23 @@ window.renderVideo = async function() {
     errorMsg.textContent = err.message || 'فشل رندرة الفيديو. يرجى المحاولة مرة أخرى.';
   }
 };
+
+// ==================== Floating Media Player Preview on Scroll ====================
+window.addEventListener('scroll', function() {
+  const wrapper = document.getElementById('preview-wrapper');
+  if (!wrapper) return;
+
+  const editorState = document.getElementById('editor-state');
+  // Only float if the editor state is active and visible
+  if (editorState.classList.contains('hidden')) {
+    wrapper.classList.remove('floating-preview');
+    return;
+  }
+
+  // Float if scrolled past 350px (so player goes out of view)
+  if (window.scrollY > 350) {
+    wrapper.classList.add('floating-preview');
+  } else {
+    wrapper.classList.remove('floating-preview');
+  }
+});
