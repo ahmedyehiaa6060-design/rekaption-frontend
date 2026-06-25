@@ -48,85 +48,9 @@
           </div>
         </div>
 
-        <!-- Animation Style -->
+        <!-- Words Limits for Transcription -->
         <div class="form-section">
-          <label class="form-label">حركة الكابشن</label>
-          <div class="grid-4">
-            <div class="anim-card selected" data-anim="pop" onclick="selectAnimation(this)">
-              <span class="anim-icon">💥</span>
-              <span class="anim-name">Pop</span>
-              <span class="anim-desc">نص يقفز تدريجياً</span>
-            </div>
-            <div class="anim-card" data-anim="wave" onclick="selectAnimation(this)">
-              <span class="anim-icon">🌊</span>
-              <span class="anim-name">Wave</span>
-              <span class="anim-desc">توهج كلمة تلو الأخرى</span>
-            </div>
-            <div class="anim-card" data-anim="slide" onclick="selectAnimation(this)">
-              <span class="anim-icon">🚀</span>
-              <span class="anim-name">Slide</span>
-              <span class="anim-desc">تتحرك الجمل للأعلى</span>
-            </div>
-            <div class="anim-card" data-anim="classic" onclick="selectAnimation(this)">
-              <span class="anim-icon">📝</span>
-              <span class="anim-name">Classic</span>
-              <span class="anim-desc">ظهور كلاسيكي بدون حركة</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Colors & Words Limits & Customizations -->
-        <div class="form-section">
-          <label class="form-label">تنسيق النصوص والتعديلات المتقدمة 🎨</label>
-          
-          <!-- Colors Grid -->
-          <div class="grid-3" style="margin-bottom:15px">
-            <div class="control-field">
-              <span class="control-label">الكلمة النشطة</span>
-              <div class="color-input-wrapper">
-                <div class="color-circle-preview">
-                  <input type="color" id="active-color" value="#FFDE4D" />
-                </div>
-                <span id="active-color-hex" class="color-hex-text">#FFDE4D</span>
-              </div>
-            </div>
-            <div class="control-field">
-              <span class="control-label">باقي الكلمات</span>
-              <div class="color-input-wrapper">
-                <div class="color-circle-preview">
-                  <input type="color" id="inactive-color" value="#FFFFFF" />
-                </div>
-                <span id="inactive-color-hex" class="color-hex-text">#FFFFFF</span>
-              </div>
-            </div>
-            <div class="control-field">
-              <span class="control-label">لون الخلفية</span>
-              <div class="color-input-wrapper">
-                <div class="color-circle-preview">
-                  <input type="color" id="bg-color" value="#000000" />
-                </div>
-                <span id="bg-color-hex" class="color-hex-text">#000000</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Size & Opacity & Sync Grid -->
-          <div class="grid-3" style="margin-bottom:15px">
-            <div class="control-field">
-              <span class="control-label">حجم الخط (بكسل)</span>
-              <input type="number" id="font-size" value="75" min="20" max="150" />
-            </div>
-            <div class="control-field">
-              <span class="control-label">شفافية الخلفية (0-100)</span>
-              <input type="range" id="bg-opacity" value="0" min="0" max="100" style="width: 100%; margin-top: 8px;" />
-            </div>
-            <div class="control-field">
-              <span class="control-label">مزامنة الصوت (ثواني +/-)</span>
-              <input type="number" id="sync-offset" value="0.20" step="0.05" min="-2.0" max="2.0" />
-            </div>
-          </div>
-          
-          <!-- Limits Grid -->
+          <label class="form-label">تقسيم الجمل والكلمات (تأثير تفريغ الذكاء الاصطناعي) ⏱️</label>
           <div class="grid-2">
             <div class="control-field">
               <span class="control-label">الحد الأدنى للكلمات/السطر</span>
@@ -221,6 +145,81 @@
         <div class="workspace-left">
           <div id="preview-wrapper" class="preview-media-wrapper">
             <!-- Video and Audio elements will be injected here dynamically -->
+          </div>
+          
+          <!-- Styling & Appearance Controls (In-Editor) -->
+          <div class="panel-section-compact" style="background: rgba(14, 12, 24, 0.4); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 15px; width: 100%; box-sizing: border-box;">
+            <h3 style="font-size: 14px; margin-top: 0; margin-bottom: 12px; color: var(--purple-accent); font-weight: 700;">تنسيق الكابشن والمظهر 🎨</h3>
+            
+            <!-- Animation Selector inside Editor! -->
+            <div class="control-field" style="margin-bottom: 15px;">
+              <span class="control-label" style="font-size: 11px;">حركة الكابشن</span>
+              <div class="grid-4" style="gap: 8px;">
+                <div class="anim-card selected" data-anim="pop" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+                  <span style="font-size: 14px;">💥</span>
+                  <span style="display:block; font-weight:600; margin-top:4px;">Pop</span>
+                </div>
+                <div class="anim-card" data-anim="wave" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+                  <span style="font-size: 14px;">🌊</span>
+                  <span style="display:block; font-weight:600; margin-top:4px;">Wave</span>
+                </div>
+                <div class="anim-card" data-anim="slide" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+                  <span style="font-size: 14px;">🚀</span>
+                  <span style="display:block; font-weight:600; margin-top:4px;">Slide</span>
+                </div>
+                <div class="anim-card" data-anim="classic" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+                  <span style="font-size: 14px;">📝</span>
+                  <span style="display:block; font-weight:600; margin-top:4px;">Classic</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Colors Grid! -->
+            <div class="grid-3" style="margin-bottom:12px; gap: 10px;">
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">الكلمة النشطة</span>
+                <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
+                  <div class="color-circle-preview" style="width: 20px; height: 20px;">
+                    <input type="color" id="active-color" value="#FFDE4D" />
+                  </div>
+                  <span id="active-color-hex" class="color-hex-text" style="font-size: 10px;">#FFDE4D</span>
+                </div>
+              </div>
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">باقي الكلمات</span>
+                <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
+                  <div class="color-circle-preview" style="width: 20px; height: 20px;">
+                    <input type="color" id="inactive-color" value="#FFFFFF" />
+                  </div>
+                  <span id="inactive-color-hex" class="color-hex-text" style="font-size: 10px;">#FFFFFF</span>
+                </div>
+              </div>
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">لون الخلفية</span>
+                <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
+                  <div class="color-circle-preview" style="width: 20px; height: 20px;">
+                    <input type="color" id="bg-color" value="#000000" />
+                  </div>
+                  <span id="bg-color-hex" class="color-hex-text" style="font-size: 10px;">#000000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Font, Opacity & Sync Grid! -->
+            <div class="grid-3" style="gap: 10px;">
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">حجم الخط</span>
+                <input type="number" id="font-size" value="75" min="20" max="150" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
+              </div>
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">شفافية الخلفية</span>
+                <input type="range" id="bg-opacity" value="0" min="0" max="100" style="width: 100%; margin-top: 8px;" />
+              </div>
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">المزامنة (+/- ث)</span>
+                <input type="number" id="sync-offset" value="0.20" step="0.05" min="-2.0" max="2.0" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
+              </div>
+            </div>
           </div>
           
           <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; border: 1px solid var(--border-subtle); font-size: 13px; color: var(--text-muted); line-height: 1.6;">

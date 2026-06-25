@@ -115,15 +115,28 @@ window.selectAnimation = function(el) {
   selectedAnimation = el.dataset.anim;
 };
 
-// ==================== Color Pickers Casing ====================
+// ==================== Color Pickers Casing & Live Updates ====================
 document.getElementById('active-color').addEventListener('input', function() {
   document.getElementById('active-color-hex').textContent = this.value.toUpperCase();
+  if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
 });
 document.getElementById('inactive-color').addEventListener('input', function() {
   document.getElementById('inactive-color-hex').textContent = this.value.toUpperCase();
+  if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
 });
 document.getElementById('bg-color').addEventListener('input', function() {
   document.getElementById('bg-color-hex').textContent = this.value.toUpperCase();
+  if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
+});
+
+// Other styling changes trigger live refresh
+['font-size', 'bg-opacity'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', () => {
+      if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
+    });
+  }
 });
 
 // ==================== Advanced Settings panel toggler ====================
