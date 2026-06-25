@@ -171,6 +171,12 @@ body {
   gap: 12px;
 }
 
+.grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+
 /* Custom File Boxes */
 .file-upload-box {
   background: var(--input-bg);

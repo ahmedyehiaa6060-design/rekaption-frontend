@@ -162,28 +162,7 @@ window.resetApp = function() {
 // ==================== Silence/Snooze Check Helper ====================
 function isSpeaking(segment, time) {
   if (!segment || !segment.words || segment.words.length === 0) return false;
-  
-  const firstWord = segment.words[0];
-  const lastWord = segment.words[segment.words.length - 1];
-  
-  // 1. Before first word or after last word (with 0.15s padding)
-  if (time < firstWord.start - 0.15 || time > lastWord.end + 0.15) {
-    return false;
-  }
-  
-  // 2. Silent gaps between words (greater than 0.35s)
-  for (let i = 0; i < segment.words.length - 1; i++) {
-    const currentWordEnd = segment.words[i].end;
-    const nextWordStart = segment.words[i+1].start;
-    const gap = nextWordStart - currentWordEnd;
-    if (gap > 0.35) {
-      if (time > currentWordEnd + 0.15 && time < nextWordStart - 0.15) {
-        return false;
-      }
-    }
-  }
-  
-  return true;
+  return segment.words.some(w => time >= (w.start - 0.05) && time <= (w.end + 0.05));
 }
 
 // ==================== Media Player & Live Caption Overlay ====================
