@@ -276,11 +276,10 @@ function updateActiveSegment(time) {
   if (newActiveIndex !== activeSegmentIndex) {
     activeSegmentIndex = newActiveIndex;
     
-    // Highlight active card and scroll it into view
+    // Highlight active card
     document.querySelectorAll('.segment-card').forEach((card, idx) => {
       if (idx === activeSegmentIndex) {
         card.classList.add('active');
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {
         card.classList.remove('active');
       }
@@ -323,9 +322,10 @@ function updateLiveCaptionOverlay(time) {
     overlayContainer.style.background = `rgba(${hexToRgb(bgColor)}, ${bgOpacity / 100})`;
     overlayContainer.style.backdropFilter = 'blur(8px)';
     overlayContainer.style.webkitBackdropFilter = 'blur(8px)';
-    overlayContainer.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-    overlayContainer.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
-    overlayContainer.style.padding = '10px 14px';
+    overlayContainer.style.border = 'none'; // Clean sharp rectangular edge
+    overlayContainer.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.5)';
+    overlayContainer.style.padding = '6px 12px'; // Tight padding
+    overlayContainer.style.borderRadius = '4px'; // 4px tight corners
   } else {
     overlayContainer.style.background = 'none';
     overlayContainer.style.backdropFilter = 'none';
@@ -333,6 +333,7 @@ function updateLiveCaptionOverlay(time) {
     overlayContainer.style.border = 'none';
     overlayContainer.style.boxShadow = 'none';
     overlayContainer.style.padding = '0';
+    overlayContainer.style.borderRadius = '0';
   }
   
   let html = '';
@@ -601,23 +602,3 @@ window.renderVideo = async function() {
     errorMsg.textContent = err.message || 'فشل رندرة الفيديو. يرجى المحاولة مرة أخرى.';
   }
 };
-
-// ==================== Floating Media Player Preview on Scroll ====================
-window.addEventListener('scroll', function() {
-  const wrapper = document.getElementById('preview-wrapper');
-  if (!wrapper) return;
-
-  const editorState = document.getElementById('editor-state');
-  // Only float if the editor state is active and visible
-  if (editorState.classList.contains('hidden')) {
-    wrapper.classList.remove('floating-preview');
-    return;
-  }
-
-  // Float if scrolled past 350px (so player goes out of view)
-  if (window.scrollY > 350) {
-    wrapper.classList.add('floating-preview');
-  } else {
-    wrapper.classList.remove('floating-preview');
-  }
-});
