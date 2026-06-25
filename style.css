@@ -500,3 +500,196 @@ input[type="number"]:focus, input[type="text"]:focus {
 
 /* Utility */
 .hidden { display: none !important; }
+
+/* Interactive Editor Workspace */
+.editor-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .editor-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+.workspace-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.workspace-right {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-left: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 20px;
+  background: rgba(14, 12, 24, 0.4);
+}
+
+/* Custom scrollbar for editor */
+.workspace-right::-webkit-scrollbar {
+  width: 6px;
+}
+.workspace-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+.workspace-right::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+.workspace-right::-webkit-scrollbar-thumb:hover {
+  background: var(--purple-accent);
+}
+
+/* Segment Card in Editor */
+.segment-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  text-align: right;
+}
+
+.segment-card:hover {
+  border-color: rgba(168, 85, 247, 0.3);
+  transform: translateY(-2px);
+}
+
+.segment-card.active {
+  border-color: var(--purple-accent);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+  background: rgba(168, 85, 247, 0.07);
+}
+
+.segment-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse; /* Arabic align friendly */
+}
+
+.segment-time-badge {
+  font-size: 11px;
+  font-family: var(--font-en);
+  color: var(--purple-accent);
+  background: rgba(168, 85, 247, 0.1);
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-weight: 600;
+}
+
+.segment-play-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+  font-family: var(--font-ar);
+  font-weight: 600;
+}
+
+.segment-play-btn:hover {
+  color: var(--purple-accent);
+}
+
+.segment-card.active .segment-play-btn {
+  color: var(--purple-accent);
+}
+
+.segment-textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-main);
+  font-family: var(--font-ar);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  min-height: 65px;
+  transition: all 0.2s;
+  outline: none;
+  direction: rtl;
+  text-align: right;
+}
+
+.segment-textarea:focus {
+  border-color: var(--purple-accent);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Media preview wrapper */
+.preview-media-wrapper {
+  width: 100%;
+  aspect-ratio: 9/16;
+  background: #000;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  position: relative;
+  max-width: 320px;
+  margin: 0 auto;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+.preview-media-wrapper.audio-mode {
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #120e2b 0%, #07060b 100%);
+  max-width: 100%;
+}
+
+.preview-media-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.audio-equalizer-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 15px;
+  height: 40px;
+}
+
+.audio-equalizer-dot {
+  width: 6px;
+  height: 24px;
+  background: var(--purple-accent);
+  border-radius: 3px;
+  animation: bounce-eq 1.2s infinite ease-in-out;
+}
+
+.audio-equalizer-dot:nth-child(2) { animation-delay: 0.2s; height: 36px; background: var(--pink-accent); }
+.audio-equalizer-dot:nth-child(3) { animation-delay: 0.4s; height: 18px; }
+.audio-equalizer-dot:nth-child(4) { animation-delay: 0.6s; height: 28px; background: var(--pink-accent); }
+
+@keyframes bounce-eq {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}

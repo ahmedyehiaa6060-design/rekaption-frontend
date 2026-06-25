@@ -21,7 +21,7 @@
     </header>
 
     <!-- Main Dashboard Grid -->
-    <div class="dashboard-grid">
+    <div id="main-dashboard" class="dashboard-grid">
       
       <!-- LEFT PANEL: CUSTOMIZATION CONTROLS -->
       <form id="form-controls" class="panel">
@@ -172,6 +172,38 @@
 
       </div>
 
+    </div>
+
+    <!-- Interactive Editor Workspace -->
+    <div id="editor-state" class="panel hidden" style="margin-top: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px;">
+        <h2 class="panel-title" style="margin-bottom: 0;">محرر النصوص والتفريغ التفاعلي ✏️</h2>
+        <button type="button" class="btn-secondary" onclick="resetApp()" style="width: auto; padding: 8px 16px;">
+          إلغاء والبدء من جديد 🔄
+        </button>
+      </div>
+      
+      <div class="editor-workspace">
+        <!-- Left Column: Media Player & Render Trigger -->
+        <div class="workspace-left">
+          <div id="preview-wrapper" class="preview-media-wrapper">
+            <!-- Video and Audio elements will be injected here dynamically -->
+          </div>
+          
+          <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; border: 1px solid var(--border-subtle); font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+            💡 <strong>نصيحة ذكية:</strong> يمكنك تشغيل المقطع والاستماع إليه. سيقوم المحرر بتحديد وتلوين الجملة الحالية تلقائياً باللون البنفسجي وتحريك السكرول معها! انقر على زر التشغيل 🎧 بجانب أي جملة للانتقال إليها مباشرة، واكتب في المربع لتعديل أي كلمة.
+          </div>
+          
+          <button type="button" id="render-btn" class="btn-primary" onclick="renderVideo()" style="padding: 16px; font-size: 16px;">
+            <span>🚀</span> رندرة وتوليد الفيديو النهائي
+          </button>
+        </div>
+        
+        <!-- Right Column: SRT Scrollable Editor -->
+        <div id="editor-segments" class="workspace-right">
+          <!-- Segment cards will be injected here dynamically -->
+        </div>
+      </div>
     </div>
 
     <!-- Advanced Settings Collapsible -->
