@@ -75,10 +75,12 @@
           </div>
         </div>
 
-        <!-- Colors & Words Limits -->
+        <!-- Colors & Words Limits & Customizations -->
         <div class="form-section">
-          <label class="form-label">تنسيق النصوص والألوان</label>
-          <div class="grid-2" style="margin-bottom:15px">
+          <label class="form-label">تنسيق النصوص والتعديلات المتقدمة 🎨</label>
+          
+          <!-- Colors Grid -->
+          <div class="grid-3" style="margin-bottom:15px">
             <div class="control-field">
               <span class="control-label">الكلمة النشطة</span>
               <div class="color-input-wrapper">
@@ -97,8 +99,34 @@
                 <span id="inactive-color-hex" class="color-hex-text">#FFFFFF</span>
               </div>
             </div>
+            <div class="control-field">
+              <span class="control-label">لون الخلفية</span>
+              <div class="color-input-wrapper">
+                <div class="color-circle-preview">
+                  <input type="color" id="bg-color" value="#000000" />
+                </div>
+                <span id="bg-color-hex" class="color-hex-text">#000000</span>
+              </div>
+            </div>
           </div>
           
+          <!-- Size & Opacity & Sync Grid -->
+          <div class="grid-3" style="margin-bottom:15px">
+            <div class="control-field">
+              <span class="control-label">حجم الخط (بكسل)</span>
+              <input type="number" id="font-size" value="75" min="20" max="150" />
+            </div>
+            <div class="control-field">
+              <span class="control-label">شفافية الخلفية (0-100)</span>
+              <input type="range" id="bg-opacity" value="0" min="0" max="100" style="width: 100%; margin-top: 8px;" />
+            </div>
+            <div class="control-field">
+              <span class="control-label">مزامنة الصوت (ثواني +/-)</span>
+              <input type="number" id="sync-offset" value="0.20" step="0.05" min="-2.0" max="2.0" />
+            </div>
+          </div>
+          
+          <!-- Limits Grid -->
           <div class="grid-2">
             <div class="control-field">
               <span class="control-label">الحد الأدنى للكلمات/السطر</span>

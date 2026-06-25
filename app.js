@@ -122,6 +122,9 @@ document.getElementById('active-color').addEventListener('input', function() {
 document.getElementById('inactive-color').addEventListener('input', function() {
   document.getElementById('inactive-color-hex').textContent = this.value.toUpperCase();
 });
+document.getElementById('bg-color').addEventListener('input', function() {
+  document.getElementById('bg-color-hex').textContent = this.value.toUpperCase();
+});
 
 // ==================== Advanced Settings panel toggler ====================
 window.toggleAdvanced = function() {
@@ -158,6 +161,15 @@ window.resetApp = function() {
   
   showState(uploadState);
 };
+
+// Helper to convert hex to rgb for background opacity
+function hexToRgb(hex) {
+  const cleanHex = hex.replace('#', '');
+  const r = parseInt(cleanHex.substring(0, 2), 16) || 0;
+  const g = parseInt(cleanHex.substring(2, 4), 16) || 0;
+  const b = parseInt(cleanHex.substring(4, 6), 16) || 0;
+  return `${r}, ${g}, ${b}`;
+}
 
 // ==================== Silence/Snooze Check Helper ====================
 function isSpeaking(segment, time) {
@@ -280,6 +292,29 @@ function updateLiveCaptionOverlay(time) {
   overlayContainer.classList.remove('hidden');
   const activeColor = document.getElementById('active-color').value;
   const inactiveColor = document.getElementById('inactive-color').value;
+  
+  // Read dynamic style customizations
+  const fontSize = parseFloat(document.getElementById('font-size').value) || 75;
+  const bgColor = document.getElementById('bg-color').value;
+  const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 0;
+  
+  // Apply styles to overlay container dynamically
+  overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
+  if (bgOpacity > 0) {
+    overlayContainer.style.background = `rgba(${hexToRgb(bgColor)}, ${bgOpacity / 100})`;
+    overlayContainer.style.backdropFilter = 'blur(8px)';
+    overlayContainer.style.webkitBackdropFilter = 'blur(8px)';
+    overlayContainer.style.border = '1px solid rgba(255, 255, 255, 0.08)';
+    overlayContainer.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
+    overlayContainer.style.padding = '10px 14px';
+  } else {
+    overlayContainer.style.background = 'none';
+    overlayContainer.style.backdropFilter = 'none';
+    overlayContainer.style.webkitBackdropFilter = 'none';
+    overlayContainer.style.border = 'none';
+    overlayContainer.style.boxShadow = 'none';
+    overlayContainer.style.padding = '0';
+  }
   
   let html = '';
   segment.words.forEach(w => {
@@ -506,7 +541,11 @@ window.renderVideo = async function() {
     activeColor: document.getElementById('active-color').value,
     inactiveColor: document.getElementById('inactive-color').value,
     leftLogo: transcribeData.leftLogo,
-    rightLogo: transcribeData.rightLogo
+    rightLogo: transcribeData.rightLogo,
+    fontSize: parseInt(document.getElementById('font-size').value) || 75,
+    bgColor: document.getElementById('bg-color').value,
+    bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 0,
+    syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20
   };
   
   try {

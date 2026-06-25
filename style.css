@@ -512,7 +512,7 @@ input[type="number"]:focus, input[type="text"]:focus {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 30px;
-  align-items: stretch;
+  align-items: start;
   width: 100%;
   margin-top: 10px;
 }
@@ -527,6 +527,8 @@ input[type="number"]:focus, input[type="text"]:focus {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: sticky;
+  top: 20px;
 }
 
 .workspace-right {
