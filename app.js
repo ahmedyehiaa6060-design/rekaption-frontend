@@ -159,6 +159,33 @@ window.resetApp = function() {
   showState(uploadState);
 };
 
+// ==================== Silence/Snooze Check Helper ====================
+function isSpeaking(segment, time) {
+  if (!segment || !segment.words || segment.words.length === 0) return false;
+  
+  const firstWord = segment.words[0];
+  const lastWord = segment.words[segment.words.length - 1];
+  
+  // 1. Before first word or after last word (with 0.15s padding)
+  if (time < firstWord.start - 0.15 || time > lastWord.end + 0.15) {
+    return false;
+  }
+  
+  // 2. Silent gaps between words (greater than 0.35s)
+  for (let i = 0; i < segment.words.length - 1; i++) {
+    const currentWordEnd = segment.words[i].end;
+    const nextWordStart = segment.words[i+1].start;
+    const gap = nextWordStart - currentWordEnd;
+    if (gap > 0.35) {
+      if (time > currentWordEnd + 0.15 && time < nextWordStart - 0.15) {
+        return false;
+      }
+    }
+  }
+  
+  return true;
+}
+
 // ==================== Media Player & Live Caption Overlay ====================
 function initMediaPlayer() {
   const wrapper = document.getElementById('preview-wrapper');
@@ -263,8 +290,15 @@ function updateLiveCaptionOverlay(time) {
     return;
   }
   
-  overlayContainer.classList.remove('hidden');
   const segment = transcribeData.segments[activeSegmentIndex];
+  
+  // Respect silence / snooze
+  if (!isSpeaking(segment, time)) {
+    overlayContainer.classList.add('hidden');
+    return;
+  }
+  
+  overlayContainer.classList.remove('hidden');
   const activeColor = document.getElementById('active-color').value;
   const inactiveColor = document.getElementById('inactive-color').value;
   
@@ -335,6 +369,69 @@ window.handleSegmentChange = function(index, newText) {
     updateLiveCaptionOverlay(currentTime);
   }
 };
+
+// ==================== Enter Key Split Handling ====================
+function handleSegmentSplit(index, cursorPosition, fullText) {
+  if (!transcribeData) return;
+  
+  const seg = transcribeData.segments[index];
+  if (!seg.words || seg.words.length <= 1) return; // Cannot split if 0 or 1 word
+  
+  // 1. Determine how many words are before the cursor
+  const textBefore = fullText.substring(0, cursorPosition);
+  const wordsBefore = textBefore.trim().split(/\s+/).filter(w => w !== "");
+  const splitIndex = wordsBefore.length;
+  
+  // Only split if we have a valid split point
+  if (splitIndex <= 0 || splitIndex >= seg.words.length) return;
+  
+  // 2. Split the words array
+  const wordsA = seg.words.slice(0, splitIndex);
+  const wordsB = seg.words.slice(splitIndex);
+  
+  // 3. Create two new segments (retaining exact word timestamps)
+  const segA = {
+    start: seg.start,
+    end: wordsA[wordsA.length - 1].end,
+    text: wordsA.map(w => w.word).join(" "),
+    words: wordsA
+  };
+  
+  const segB = {
+    start: wordsB[0].start,
+    end: seg.end,
+    text: wordsB.map(w => w.word).join(" "),
+    words: wordsB
+  };
+  
+  // 4. Replace the old segment with the two new segments
+  transcribeData.segments.splice(index, 1, segA, segB);
+  
+  // 5. Re-render the segment cards
+  renderSegmentCards();
+  
+  // 6. Focus the second segment's textarea at the beginning of the text
+  setTimeout(() => {
+    const nextTextarea = document.querySelector(`#segment-card-${index + 1} .segment-textarea`);
+    if (nextTextarea) {
+      nextTextarea.focus();
+      nextTextarea.setSelectionRange(0, 0);
+    }
+  }, 50);
+}
+
+// Add event delegation for Enter key split on segment textareas
+document.getElementById('editor-segments').addEventListener('keydown', function(e) {
+  if (e.target.classList.contains('segment-textarea') && e.key === 'Enter') {
+    e.preventDefault(); // Prevent inserting actual newline character
+    
+    const textarea = e.target;
+    const card = textarea.closest('.segment-card');
+    const index = parseInt(card.id.replace('segment-card-', ''));
+    
+    handleSegmentSplit(index, textarea.selectionStart, textarea.value);
+  }
+});
 
 // ==================== Form submission & API handling ====================
 formControls.addEventListener('submit', async function(e) {
