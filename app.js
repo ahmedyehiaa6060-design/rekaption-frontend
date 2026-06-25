@@ -108,12 +108,68 @@ window.clearLogo = function(side) {
   }
 };
 
-// ==================== Animation Styles Selection ====================
+// ==================== Animation Styles Selection & Synchronization ====================
+window.selectUploadAnimation = function(el) {
+  document.querySelectorAll('.upload-anim-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAnimation = el.dataset.anim;
+  
+  // Sync to editor animation cards
+  const editorCard = document.querySelector(`.anim-card[data-anim="${selectedAnimation}"]`);
+  if (editorCard) {
+    document.querySelectorAll('.anim-card').forEach(c => c.classList.remove('selected'));
+    editorCard.classList.add('selected');
+  }
+};
+
 window.selectAnimation = function(el) {
   document.querySelectorAll('.anim-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedAnimation = el.dataset.anim;
+  
+  // Sync to upload animation cards
+  const uploadCard = document.querySelector(`.upload-anim-card[data-anim="${selectedAnimation}"]`);
+  if (uploadCard) {
+    document.querySelectorAll('.upload-anim-card').forEach(c => c.classList.remove('selected'));
+    uploadCard.classList.add('selected');
+  }
 };
+
+function bindSyncedInputs(id1, id2, isColor = false) {
+  const el1 = document.getElementById(id1);
+  const el2 = document.getElementById(id2);
+  if (!el1 || !el2) return;
+  
+  el1.addEventListener('input', function() {
+    el2.value = this.value;
+    if (isColor) {
+      const hexText = document.getElementById(id2 + '-hex');
+      if (hexText) hexText.textContent = this.value.toUpperCase();
+    }
+    el2.dispatchEvent(new Event('input'));
+  });
+  
+  el2.addEventListener('input', function() {
+    el1.value = this.value;
+    if (isColor) {
+      const hexText = document.getElementById(id1 + '-hex');
+      if (hexText) hexText.textContent = this.value.toUpperCase();
+    }
+    if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
+  });
+}
+
+// Binds all upload-side controls to editor-side controls
+document.addEventListener('DOMContentLoaded', () => {
+  bindSyncedInputs('upload-active-color', 'active-color', true);
+  bindSyncedInputs('upload-inactive-color', 'inactive-color', true);
+  bindSyncedInputs('upload-bg-color', 'bg-color', true);
+  bindSyncedInputs('upload-font-size', 'font-size');
+  bindSyncedInputs('upload-bg-opacity', 'bg-opacity');
+  bindSyncedInputs('upload-sync-offset', 'sync-offset');
+  bindSyncedInputs('upload-word-spacing', 'word-spacing');
+  bindSyncedInputs('upload-bg-padding', 'bg-padding');
+});
 
 // ==================== Color Pickers Casing & Live Updates ====================
 document.getElementById('active-color').addEventListener('input', function() {
@@ -130,7 +186,7 @@ document.getElementById('bg-color').addEventListener('input', function() {
 });
 
 // Other styling changes trigger live refresh
-['font-size', 'bg-opacity'].forEach(id => {
+['font-size', 'bg-opacity', 'word-spacing', 'bg-padding'].forEach(id => {
   const el = document.getElementById(id);
   if (el) {
     el.addEventListener('input', () => {
@@ -226,12 +282,12 @@ function initMediaPlayer() {
       left: 50%;
       transform: translateX(-50%);
       width: max-content;
-      max-width: 90%;
+      max-width: 95%;
       background: rgba(10, 8, 20, 0.85);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
+      border: none;
+      border-radius: 4px;
       padding: 8px 16px;
       text-align: center;
       pointer-events: none;
@@ -243,7 +299,8 @@ function initMediaPlayer() {
       font-family: 'Cairo', sans-serif;
       line-height: 1.5;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      white-space: nowrap;
       justify-content: center;
     "></div>
   `;
@@ -312,19 +369,26 @@ function updateLiveCaptionOverlay(time) {
   const inactiveColor = document.getElementById('inactive-color').value;
   
   // Read dynamic style customizations
-  const fontSize = parseFloat(document.getElementById('font-size').value) || 75;
+  const fontSize = parseFloat(document.getElementById('font-size').value) || 50;
   const bgColor = document.getElementById('bg-color').value;
   const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 0;
+  const wordSpacing = parseFloat(document.getElementById('word-spacing').value) || 25;
+  const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 8;
   
   // Apply styles to overlay container dynamically
   overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
+  overlayContainer.style.flexWrap = 'nowrap';
+  overlayContainer.style.whiteSpace = 'nowrap';
+  overlayContainer.style.columnGap = `${wordSpacing / 100}em`;
+  overlayContainer.style.maxWidth = '95%';
+  
   if (bgOpacity > 0) {
     overlayContainer.style.background = `rgba(${hexToRgb(bgColor)}, ${bgOpacity / 100})`;
     overlayContainer.style.backdropFilter = 'blur(8px)';
     overlayContainer.style.webkitBackdropFilter = 'blur(8px)';
     overlayContainer.style.border = 'none'; // Clean sharp rectangular edge
     overlayContainer.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.5)';
-    overlayContainer.style.padding = '6px 12px'; // Tight padding
+    overlayContainer.style.padding = `${bgPadding}px ${bgPadding * 2}px`;
     overlayContainer.style.borderRadius = '4px'; // 4px tight corners
   } else {
     overlayContainer.style.background = 'none';
@@ -342,7 +406,7 @@ function updateLiveCaptionOverlay(time) {
     const color = isWordActive ? activeColor : inactiveColor;
     const shadow = isWordActive ? `text-shadow: 0 0 8px ${activeColor}B3;` : '';
     const scale = isWordActive ? 'transform: scale(1.12);' : '';
-    html += `<span style="color: ${color}; ${shadow} ${scale} transition: all 0.12s ease; display: inline-block; margin: 0 3px;">${w.word}</span>`;
+    html += `<span style="color: ${color}; ${shadow} ${scale} transition: all 0.12s ease; display: inline-block;">${w.word}</span>`;
   });
   
   overlayContainer.innerHTML = html;
@@ -562,10 +626,12 @@ window.renderVideo = async function() {
     inactiveColor: document.getElementById('inactive-color').value,
     leftLogo: transcribeData.leftLogo,
     rightLogo: transcribeData.rightLogo,
-    fontSize: parseInt(document.getElementById('font-size').value) || 75,
+    fontSize: parseInt(document.getElementById('font-size').value) || 50,
     bgColor: document.getElementById('bg-color').value,
     bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 0,
-    syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20
+    syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20,
+    wordSpacing: parseInt(document.getElementById('word-spacing').value) || 25,
+    bgPadding: parseInt(document.getElementById('bg-padding').value) || 8
   };
   
   try {

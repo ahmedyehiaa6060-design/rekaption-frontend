@@ -63,6 +63,93 @@
           </div>
         </div>
 
+        <!-- Styling & Appearance Controls (Pre-Upload) -->
+        <div class="form-section">
+          <label class="form-label">تنسيق الكابشن والمظهر (قبل التوليد) 🎨</label>
+          
+          <!-- Animation Selector -->
+          <div class="control-field" style="margin-bottom: 15px;">
+            <span class="control-label" style="font-size: 11px;">حركة الكابشن</span>
+            <div class="grid-4" style="gap: 8px;">
+              <div class="upload-anim-card selected" data-anim="pop" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
+                <span style="font-size: 14px;">💥</span>
+                <span style="display:block; font-weight:600; margin-top:4px;">Pop</span>
+              </div>
+              <div class="upload-anim-card" data-anim="wave" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
+                <span style="font-size: 14px;">🌊</span>
+                <span style="display:block; font-weight:600; margin-top:4px;">Wave</span>
+              </div>
+              <div class="upload-anim-card" data-anim="slide" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
+                <span style="font-size: 14px;">🚀</span>
+                <span style="display:block; font-weight:600; margin-top:4px;">Slide</span>
+              </div>
+              <div class="upload-anim-card" data-anim="classic" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
+                <span style="font-size: 14px;">📝</span>
+                <span style="display:block; font-weight:600; margin-top:4px;">Classic</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Colors Grid -->
+          <div class="grid-3" style="margin-bottom:12px; gap: 10px;">
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">الكلمة النشطة</span>
+              <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
+                <div class="color-circle-preview" style="width: 20px; height: 20px;">
+                  <input type="color" id="upload-active-color" value="#FFDE4D" />
+                </div>
+                <span id="upload-active-color-hex" class="color-hex-text" style="font-size: 10px;">#FFDE4D</span>
+              </div>
+            </div>
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">باقي الكلمات</span>
+              <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
+                <div class="color-circle-preview" style="width: 20px; height: 20px;">
+                  <input type="color" id="upload-inactive-color" value="#FFFFFF" />
+                </div>
+                <span id="upload-inactive-color-hex" class="color-hex-text" style="font-size: 10px;">#FFFFFF</span>
+              </div>
+            </div>
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">لون الخلفية</span>
+              <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
+                <div class="color-circle-preview" style="width: 20px; height: 20px;">
+                  <input type="color" id="upload-bg-color" value="#000000" />
+                </div>
+                <span id="upload-bg-color-hex" class="color-hex-text" style="font-size: 10px;">#000000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Font, Opacity, Spacing, Padding Grid -->
+          <div class="grid-2" style="gap: 10px; margin-bottom: 10px;">
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">حجم الخط</span>
+              <input type="number" id="upload-font-size" value="50" min="20" max="150" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
+            </div>
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">المزامنة (+/- ث)</span>
+              <input type="number" id="upload-sync-offset" value="0.20" step="0.05" min="-2.0" max="2.0" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap: 10px; margin-bottom: 10px;">
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">شفافية الخلفية</span>
+              <input type="range" id="upload-bg-opacity" value="0" min="0" max="100" style="width: 100%; margin-top: 8px;" />
+            </div>
+            <div class="control-field">
+              <span class="control-label" style="font-size: 11px;">المسافة بين الكلمات</span>
+              <input type="range" id="upload-word-spacing" value="25" min="0" max="80" style="width: 100%; margin-top: 8px;" />
+            </div>
+          </div>
+
+          <div class="control-field">
+            <span class="control-label" style="font-size: 11px;">هوامش الخلفية</span>
+            <input type="range" id="upload-bg-padding" value="8" min="2" max="30" style="width: 100%; margin-top: 8px;" />
+          </div>
+        </div>
+
         <!-- Submit Button -->
         <button type="submit" id="submit-btn" class="btn-primary" disabled>
           <span>🚀</span> توليد الفيديو النهائي
@@ -205,11 +292,11 @@
               </div>
             </div>
 
-            <!-- Font, Opacity & Sync Grid! -->
-            <div class="grid-3" style="gap: 10px;">
+            <!-- Font, Opacity, Spacing, Padding Grid! -->
+            <div class="grid-3" style="gap: 10px; margin-bottom: 10px;">
               <div class="control-field">
                 <span class="control-label" style="font-size: 11px;">حجم الخط</span>
-                <input type="number" id="font-size" value="75" min="20" max="150" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
+                <input type="number" id="font-size" value="50" min="20" max="150" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
               </div>
               <div class="control-field">
                 <span class="control-label" style="font-size: 11px;">شفافية الخلفية</span>
@@ -218,6 +305,17 @@
               <div class="control-field">
                 <span class="control-label" style="font-size: 11px;">المزامنة (+/- ث)</span>
                 <input type="number" id="sync-offset" value="0.20" step="0.05" min="-2.0" max="2.0" style="height: 34px; font-size: 12px; padding: 5px 8px;" />
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap: 10px;">
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">المسافة بين الكلمات</span>
+                <input type="range" id="word-spacing" value="25" min="0" max="80" style="width: 100%; margin-top: 8px;" />
+              </div>
+              <div class="control-field">
+                <span class="control-label" style="font-size: 11px;">هوامش الخلفية</span>
+                <input type="range" id="bg-padding" value="8" min="2" max="30" style="width: 100%; margin-top: 8px;" />
               </div>
             </div>
           </div>
