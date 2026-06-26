@@ -392,17 +392,6 @@ function updateActiveSegment(time) {
       }
     });
 
-    // Trigger slide-up animation on active segment change if animation is 'slide'
-    const overlayContainer = document.getElementById('live-caption-overlay');
-    if (overlayContainer) {
-      if (selectedAnimation === 'slide') {
-        overlayContainer.classList.remove('slide-up-segment');
-        void overlayContainer.offsetWidth; // force reflow to restart animation
-        overlayContainer.classList.add('slide-up-segment');
-      } else {
-        overlayContainer.classList.remove('slide-up-segment');
-      }
-    }
   }
   
   // Update live caption overlay with adjusted time
@@ -415,6 +404,7 @@ function updateLiveCaptionOverlay(time) {
   
   if (activeSegmentIndex === -1 || !transcribeData) {
     overlayContainer.classList.add('hidden');
+    overlayContainer.removeAttribute('data-rendered-key');
     return;
   }
   
@@ -464,40 +454,82 @@ function updateLiveCaptionOverlay(time) {
     overlayContainer.style.borderRadius = '0';
   }
   
-  let html = '';
   const outlineStroke = isBgVisible 
     ? 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 2px 0px 0px #000000, -2px 0px 0px #000000, 0px 2px 0px #000000, 0px -2px 0px #000000, 0px 4px 10px rgba(0, 0, 0, 0.95);'
     : 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 0px 4px 6px rgba(0, 0, 0, 0.8);';
-  segment.words.forEach(w => {
-    const isWordActive = time >= w.start && time <= w.end;
-    const isPast = time > w.end;
-    const color = isWordActive ? activeColor : inactiveColor;
+
+  // React-style state key to avoid destroying the DOM and breaking slide-up transitions
+  const styleKey = `${activeSegmentIndex}_${selectedAnimation}_${fontSize}_${bgColor}_${bgOpacity}_${wordSpacing}_${bgPadding}_${showBg}_${activeColor}_${inactiveColor}`;
+  const isNewSegment = overlayContainer.getAttribute('data-rendered-key') !== styleKey;
+
+  if (isNewSegment) {
+    overlayContainer.setAttribute('data-rendered-key', styleKey);
     
-    let translateY = 0;
-    let opacity = 1;
-    let transitionStr = 'none';
-    
-    if (selectedAnimation === 'reveal') {
-      if (isWordActive || isPast) {
-        translateY = 0;
-        opacity = 1;
-        transitionStr = 'transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s ease-out';
-      } else {
-        // Future words: completely hidden and lower (scaled by 4.5)
-        translateY = 3.3;
-        opacity = 0;
-        transitionStr = 'none';
+    let html = '';
+    segment.words.forEach(w => {
+      const isWordActive = time >= w.start && time <= w.end;
+      const isPast = time > w.end;
+      const color = isWordActive ? activeColor : inactiveColor;
+      
+      let translateY = 0;
+      let opacity = 1;
+      let transitionStr = 'none';
+      
+      if (selectedAnimation === 'reveal') {
+        if (isWordActive || isPast) {
+          translateY = 0;
+          opacity = 1;
+          transitionStr = 'transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s ease-out';
+        } else {
+          translateY = 3.3; // 15px scaled by 4.5
+          opacity = 0;
+          transitionStr = 'none';
+        }
       }
-    }
+      
+      const transformStr = `transform: translateY(${translateY}px);`;
+      const opacityStr = `opacity: ${opacity};`;
+      const transitionStyleStr = `transition: ${transitionStr};`;
+      
+      html += `<span class="caption-word" style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStyleStr}">${w.word}</span>`;
+    });
     
-    const transformStr = `transform: translateY(${translateY}px);`;
-    const opacityStr = `opacity: ${opacity};`;
-    const transitionStyleStr = `transition: ${transitionStr};`;
-    
-    html += `<span style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStyleStr}">${w.word}</span>`;
-  });
-  
-  overlayContainer.innerHTML = html;
+    const innerClass = selectedAnimation === 'slide' ? 'slide-up-segment' : '';
+    overlayContainer.innerHTML = `<div class="${innerClass}" style="
+      display: flex;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      justify-content: center;
+      column-gap: ${wordSpacing / 100}em;
+    ">${html}</div>`;
+  } else {
+    // Fast in-place DOM updates: update words highlights & reveal transitions smoothly without resetting keyframe animations
+    const spans = overlayContainer.querySelectorAll('.caption-word');
+    segment.words.forEach((w, idx) => {
+      const span = spans[idx];
+      if (span) {
+        const isWordActive = time >= w.start && time <= w.end;
+        const isPast = time > w.end;
+        const color = isWordActive ? activeColor : inactiveColor;
+        
+        span.style.color = color;
+        
+        if (selectedAnimation === 'reveal') {
+          let translateY = 3.3;
+          let opacity = 0;
+          let transitionStr = 'none';
+          if (isWordActive || isPast) {
+            translateY = 0;
+            opacity = 1;
+            transitionStr = 'transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s ease-out';
+          }
+          span.style.transform = `translateY(${translateY}px)`;
+          span.style.opacity = opacity;
+          span.style.transition = transitionStr;
+        }
+      }
+    });
+  }
 }
 
 // ==================== Segment Cards Rendering & Event Handling ====================
