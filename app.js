@@ -312,14 +312,12 @@ function initMediaPlayer() {
     `;
   }
   
-  // Add the Live Caption Overlay container (Centered, dynamically wrapping the text)
   mediaHtml += `
     <div id="live-caption-overlay" class="hidden" style="
       position: absolute;
-      bottom: ${transcribeData.videoPath ? '60px' : 'auto'};
-      top: ${transcribeData.videoPath ? 'auto' : '15px'};
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
       width: max-content;
       max-width: 95%;
       background: rgba(0, 0, 0, 0.61);
@@ -454,8 +452,8 @@ function updateLiveCaptionOverlay(time) {
     overlayContainer.style.webkitBackdropFilter = 'none';
     overlayContainer.style.border = 'none'; // Clean sharp rectangular edge
     overlayContainer.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.5)';
-    overlayContainer.style.padding = `${bgPadding}px ${bgPadding * 2}px`;
-    overlayContainer.style.borderRadius = '4px'; // 4px tight corners
+    overlayContainer.style.padding = `${bgPadding / 4.5}px ${(bgPadding * 2) / 4.5}px`;
+    overlayContainer.style.borderRadius = `${4 / 4.5}px`; // tight corners scaled by 4.5
   } else {
     overlayContainer.style.background = 'none';
     overlayContainer.style.backdropFilter = 'none';
@@ -485,8 +483,8 @@ function updateLiveCaptionOverlay(time) {
         opacity = 1;
         transitionStr = 'transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s ease-out';
       } else {
-        // Future words: completely hidden and lower
-        translateY = 15;
+        // Future words: completely hidden and lower (scaled by 4.5)
+        translateY = 3.3;
         opacity = 0;
         transitionStr = 'none';
       }
