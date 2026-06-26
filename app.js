@@ -437,29 +437,26 @@ function updateLiveCaptionOverlay(time) {
     
     let translateY = 0;
     let opacity = 1;
+    let transitionStr = 'none';
     
     if (selectedAnimation === 'slide') {
-      if (isWordActive) {
-        const activeDuration = time - w.start;
-        const progress = Math.min(1, activeDuration / 0.15); // 150ms slide duration
-        const easeOutBack = (x) => {
-          const c1 = 1.70158;
-          const c3 = c1 + 1;
-          return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-        };
-        const t = easeOutBack(progress);
-        translateY = 15 * (1 - t);
-      } else if (!isPast) {
+      if (isWordActive || isPast) {
+        translateY = 0;
+        opacity = 1;
+        transitionStr = 'transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s ease-out';
+      } else {
+        // Future words: completely hidden and lower
         translateY = 15;
-        opacity = 0.5;
+        opacity = 0;
+        transitionStr = 'none';
       }
     }
     
-    const transformStr = translateY !== 0 ? `transform: translateY(${translateY}px);` : '';
+    const transformStr = `transform: translateY(${translateY}px);`;
     const opacityStr = `opacity: ${opacity};`;
-    const transitionStr = isWordActive ? '' : 'transition: transform 0.15s ease-out, opacity 0.15s ease-out;';
+    const transitionStyleStr = `transition: ${transitionStr};`;
     
-    html += `<span style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStr}">${w.word}</span>`;
+    html += `<span style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStyleStr}">${w.word}</span>`;
   });
   
   overlayContainer.innerHTML = html;
