@@ -399,9 +399,9 @@ function updateLiveCaptionOverlay(time) {
   // Read dynamic style customizations
   const fontSize = parseFloat(document.getElementById('font-size').value) || 50;
   const bgColor = document.getElementById('bg-color').value;
-  const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 61;
+  const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 86;
   const wordSpacing = parseFloat(document.getElementById('word-spacing').value) || 31;
-  const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 4;
+  const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 8;
   
   // Apply styles to overlay container dynamically
   overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
@@ -432,8 +432,34 @@ function updateLiveCaptionOverlay(time) {
   const outlineStroke = 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 2px 0px 0px #000000, -2px 0px 0px #000000, 0px 2px 0px #000000, 0px -2px 0px #000000, 0px 4px 10px rgba(0, 0, 0, 0.95);';
   segment.words.forEach(w => {
     const isWordActive = time >= w.start && time <= w.end;
+    const isPast = time > w.end;
     const color = isWordActive ? activeColor : inactiveColor;
-    html += `<span style="color: ${color}; ${outlineStroke} display: inline-block;">${w.word}</span>`;
+    
+    let translateY = 0;
+    let opacity = 1;
+    
+    if (selectedAnimation === 'slide') {
+      if (isWordActive) {
+        const activeDuration = time - w.start;
+        const progress = Math.min(1, activeDuration / 0.15); // 150ms slide duration
+        const easeOutBack = (x) => {
+          const c1 = 1.70158;
+          const c3 = c1 + 1;
+          return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+        };
+        const t = easeOutBack(progress);
+        translateY = 15 * (1 - t);
+      } else if (!isPast) {
+        translateY = 15;
+        opacity = 0.5;
+      }
+    }
+    
+    const transformStr = translateY !== 0 ? `transform: translateY(${translateY}px);` : '';
+    const opacityStr = `opacity: ${opacity};`;
+    const transitionStr = isWordActive ? '' : 'transition: transform 0.15s ease-out, opacity 0.15s ease-out;';
+    
+    html += `<span style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStr}">${w.word}</span>`;
   });
   
   overlayContainer.innerHTML = html;
@@ -655,10 +681,10 @@ window.renderVideo = async function() {
     rightLogo: transcribeData.rightLogo,
     fontSize: parseInt(document.getElementById('font-size').value) || 50,
     bgColor: document.getElementById('bg-color').value,
-    bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 61,
+    bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 86,
     syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20,
     wordSpacing: parseInt(document.getElementById('word-spacing').value) || 31,
-    bgPadding: parseInt(document.getElementById('bg-padding').value) || 4
+    bgPadding: parseInt(document.getElementById('bg-padding').value) || 8
   };
   
   try {
