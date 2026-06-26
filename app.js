@@ -352,6 +352,19 @@ function updateActiveSegment(time) {
     document.querySelectorAll('.segment-card').forEach((card, idx) => {
       if (idx === activeSegmentIndex) {
         card.classList.add('active');
+        
+        // Smoothly auto-scroll this card into center view inside the right-side container
+        const container = document.querySelector('.workspace-right');
+        if (container) {
+          const cardTop = card.offsetTop;
+          const containerHeight = container.clientHeight;
+          const cardHeight = card.offsetHeight;
+          
+          container.scrollTo({
+            top: cardTop - (containerHeight / 2) + (cardHeight / 2),
+            behavior: 'smooth'
+          });
+        }
       } else {
         card.classList.remove('active');
       }
