@@ -2,7 +2,7 @@
 let audioFile = null;
 let leftLogoFile = null;
 let rightLogoFile = null;
-let selectedAnimation = 'pop';
+let selectedAnimation = 'classic';
 
 let transcribeData = null; // Holds the JSON returned from /api/transcribe
 let activeSegmentIndex = -1;
@@ -298,12 +298,12 @@ function initMediaPlayer() {
       transform: translateX(-50%);
       width: max-content;
       max-width: 95%;
-      background: rgba(10, 8, 20, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.61);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       border: none;
       border-radius: 4px;
-      padding: 8px 16px;
+      padding: 4px 8px;
       text-align: center;
       pointer-events: none;
       z-index: 10;
@@ -429,12 +429,11 @@ function updateLiveCaptionOverlay(time) {
   }
   
   let html = '';
+  const outlineStroke = 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 2px 0px 0px #000000, -2px 0px 0px #000000, 0px 2px 0px #000000, 0px -2px 0px #000000, 0px 4px 10px rgba(0, 0, 0, 0.95);';
   segment.words.forEach(w => {
     const isWordActive = time >= w.start && time <= w.end;
     const color = isWordActive ? activeColor : inactiveColor;
-    const shadow = isWordActive ? `text-shadow: 0 0 8px ${activeColor}B3;` : '';
-    const scale = isWordActive ? 'transform: scale(1.12);' : '';
-    html += `<span style="color: ${color}; ${shadow} ${scale} transition: all 0.12s ease; display: inline-block;">${w.word}</span>`;
+    html += `<span style="color: ${color}; ${outlineStroke} display: inline-block;">${w.word}</span>`;
   });
   
   overlayContainer.innerHTML = html;

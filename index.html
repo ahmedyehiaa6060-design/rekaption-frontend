@@ -58,7 +58,7 @@
             </div>
             <div class="control-field">
               <span class="control-label">الحد الأقصى للكلمات/السطر</span>
-              <input type="number" id="max-words" value="5" min="1" max="15" />
+              <input type="number" id="max-words" value="4" min="1" max="15" />
             </div>
           </div>
         </div>
@@ -70,20 +70,8 @@
           <!-- Animation Selector -->
           <div class="control-field" style="margin-bottom: 15px;">
             <span class="control-label" style="font-size: 11px;">حركة الكابشن</span>
-            <div class="grid-4" style="gap: 8px;">
-              <div class="upload-anim-card selected" data-anim="pop" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
-                <span style="font-size: 14px;">💥</span>
-                <span style="display:block; font-weight:600; margin-top:4px;">Pop</span>
-              </div>
-              <div class="upload-anim-card" data-anim="wave" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
-                <span style="font-size: 14px;">🌊</span>
-                <span style="display:block; font-weight:600; margin-top:4px;">Wave</span>
-              </div>
-              <div class="upload-anim-card" data-anim="slide" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
-                <span style="font-size: 14px;">🚀</span>
-                <span style="display:block; font-weight:600; margin-top:4px;">Slide</span>
-              </div>
-              <div class="upload-anim-card" data-anim="classic" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px;">
+              <div class="upload-anim-card selected" data-anim="classic" onclick="selectUploadAnimation(this)" style="padding: 8px; font-size: 11px; text-align: center; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); cursor: pointer;">
                 <span style="font-size: 14px;">📝</span>
                 <span style="display:block; font-weight:600; margin-top:4px;">Classic</span>
               </div>
@@ -96,9 +84,9 @@
               <span class="control-label" style="font-size: 11px;">الكلمة النشطة</span>
               <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
                 <div class="color-circle-preview" style="width: 20px; height: 20px;">
-                  <input type="color" id="upload-active-color" value="#FFDE4D" />
+                  <input type="color" id="upload-active-color" value="#FFFFFF" />
                 </div>
-                <span id="upload-active-color-hex" class="color-hex-text" style="font-size: 10px;">#FFDE4D</span>
+                <span id="upload-active-color-hex" class="color-hex-text" style="font-size: 10px;">#FFFFFF</span>
               </div>
             </div>
             <div class="control-field">
@@ -241,20 +229,8 @@
             <!-- Animation Selector inside Editor! -->
             <div class="control-field" style="margin-bottom: 15px;">
               <span class="control-label" style="font-size: 11px;">حركة الكابشن</span>
-              <div class="grid-4" style="gap: 8px;">
-                <div class="anim-card selected" data-anim="pop" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
-                  <span style="font-size: 14px;">💥</span>
-                  <span style="display:block; font-weight:600; margin-top:4px;">Pop</span>
-                </div>
-                <div class="anim-card" data-anim="wave" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
-                  <span style="font-size: 14px;">🌊</span>
-                  <span style="display:block; font-weight:600; margin-top:4px;">Wave</span>
-                </div>
-                <div class="anim-card" data-anim="slide" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
-                  <span style="font-size: 14px;">🚀</span>
-                  <span style="display:block; font-weight:600; margin-top:4px;">Slide</span>
-                </div>
-                <div class="anim-card" data-anim="classic" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px;">
+                <div class="anim-card selected" data-anim="classic" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
                   <span style="font-size: 14px;">📝</span>
                   <span style="display:block; font-weight:600; margin-top:4px;">Classic</span>
                 </div>
@@ -267,9 +243,9 @@
                 <span class="control-label" style="font-size: 11px;">الكلمة النشطة</span>
                 <div class="color-input-wrapper" style="height: 34px; padding: 3px 8px;">
                   <div class="color-circle-preview" style="width: 20px; height: 20px;">
-                    <input type="color" id="active-color" value="#FFDE4D" />
+                    <input type="color" id="active-color" value="#FFFFFF" />
                   </div>
-                  <span id="active-color-hex" class="color-hex-text" style="font-size: 10px;">#FFDE4D</span>
+                  <span id="active-color-hex" class="color-hex-text" style="font-size: 10px;">#FFFFFF</span>
                 </div>
               </div>
               <div class="control-field">
