@@ -399,9 +399,9 @@ function updateLiveCaptionOverlay(time) {
   // Read dynamic style customizations
   const fontSize = parseFloat(document.getElementById('font-size').value) || 50;
   const bgColor = document.getElementById('bg-color').value;
-  const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 0;
-  const wordSpacing = parseFloat(document.getElementById('word-spacing').value) || 25;
-  const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 8;
+  const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 61;
+  const wordSpacing = parseFloat(document.getElementById('word-spacing').value) || 31;
+  const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 4;
   
   // Apply styles to overlay container dynamically
   overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
@@ -412,8 +412,8 @@ function updateLiveCaptionOverlay(time) {
   
   if (bgOpacity > 0) {
     overlayContainer.style.background = `rgba(${hexToRgb(bgColor)}, ${bgOpacity / 100})`;
-    overlayContainer.style.backdropFilter = 'blur(8px)';
-    overlayContainer.style.webkitBackdropFilter = 'blur(8px)';
+    overlayContainer.style.backdropFilter = 'none';
+    overlayContainer.style.webkitBackdropFilter = 'none';
     overlayContainer.style.border = 'none'; // Clean sharp rectangular edge
     overlayContainer.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.5)';
     overlayContainer.style.padding = `${bgPadding}px ${bgPadding * 2}px`;
@@ -656,10 +656,10 @@ window.renderVideo = async function() {
     rightLogo: transcribeData.rightLogo,
     fontSize: parseInt(document.getElementById('font-size').value) || 50,
     bgColor: document.getElementById('bg-color').value,
-    bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 0,
+    bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 61,
     syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20,
-    wordSpacing: parseInt(document.getElementById('word-spacing').value) || 25,
-    bgPadding: parseInt(document.getElementById('bg-padding').value) || 8
+    wordSpacing: parseInt(document.getElementById('word-spacing').value) || 31,
+    bgPadding: parseInt(document.getElementById('bg-padding').value) || 4
   };
   
   try {
