@@ -179,12 +179,36 @@ document.addEventListener('DOMContentLoaded', () => {
   bindSyncedInputs('upload-word-spacing', 'word-spacing');
   bindSyncedInputs('upload-bg-padding', 'bg-padding');
 
+  // Bind show-bg checkboxes
+  const uploadShowBg = document.getElementById('upload-show-bg');
+  const showBg = document.getElementById('show-bg');
+  if (uploadShowBg && showBg) {
+    uploadShowBg.addEventListener('change', function() {
+      showBg.checked = this.checked;
+      if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
+    });
+    showBg.addEventListener('change', function() {
+      uploadShowBg.checked = this.checked;
+      if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
+    });
+  }
+
   // Initialize all range labels
   ['upload-bg-opacity', 'upload-word-spacing', 'upload-bg-padding', 'bg-opacity', 'word-spacing', 'bg-padding'].forEach(id => {
     const el = document.getElementById(id);
     if (el) updateRangeLabel(id, el.value);
   });
 });
+
+window.syncShowBg = function(el) {
+  const uploadShowBg = document.getElementById('upload-show-bg');
+  const showBg = document.getElementById('show-bg');
+  if (uploadShowBg && showBg) {
+    uploadShowBg.checked = el.checked;
+    showBg.checked = el.checked;
+    if (typeof updateLiveCaptionOverlay === 'function') updateLiveCaptionOverlay(currentTime);
+  }
+};
 
 // ==================== Color Pickers Casing & Live Updates ====================
 document.getElementById('active-color').addEventListener('input', function() {
@@ -414,6 +438,8 @@ function updateLiveCaptionOverlay(time) {
   const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 86;
   const wordSpacing = parseFloat(document.getElementById('word-spacing').value) || 31;
   const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 8;
+  const showBg = document.getElementById('show-bg').checked;
+  const isBgVisible = showBg && bgOpacity > 0;
   
   // Apply styles to overlay container dynamically
   overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
@@ -422,7 +448,7 @@ function updateLiveCaptionOverlay(time) {
   overlayContainer.style.columnGap = `${wordSpacing / 100}em`;
   overlayContainer.style.maxWidth = '95%';
   
-  if (bgOpacity > 0) {
+  if (isBgVisible) {
     overlayContainer.style.background = `rgba(${hexToRgb(bgColor)}, ${bgOpacity / 100})`;
     overlayContainer.style.backdropFilter = 'none';
     overlayContainer.style.webkitBackdropFilter = 'none';
@@ -441,7 +467,9 @@ function updateLiveCaptionOverlay(time) {
   }
   
   let html = '';
-  const outlineStroke = 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 2px 0px 0px #000000, -2px 0px 0px #000000, 0px 2px 0px #000000, 0px -2px 0px #000000, 0px 4px 10px rgba(0, 0, 0, 0.95);';
+  const outlineStroke = isBgVisible 
+    ? 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 2px 0px 0px #000000, -2px 0px 0px #000000, 0px 2px 0px #000000, 0px -2px 0px #000000, 0px 4px 10px rgba(0, 0, 0, 0.95);'
+    : 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 0px 4px 6px rgba(0, 0, 0, 0.8);';
   segment.words.forEach(w => {
     const isWordActive = time >= w.start && time <= w.end;
     const isPast = time > w.end;
@@ -693,7 +721,8 @@ window.renderVideo = async function() {
     bgOpacity: parseFloat(document.getElementById('bg-opacity').value) || 86,
     syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20,
     wordSpacing: parseInt(document.getElementById('word-spacing').value) || 31,
-    bgPadding: parseInt(document.getElementById('bg-padding').value) || 8
+    bgPadding: parseInt(document.getElementById('bg-padding').value) || 8,
+    showBg: document.getElementById('show-bg').checked
   };
   
   try {
