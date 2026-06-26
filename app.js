@@ -135,6 +135,11 @@ window.selectAnimation = function(el) {
   }
 };
 
+function updateRangeLabel(id, value) {
+  const valSpan = document.getElementById(id + '-val');
+  if (valSpan) valSpan.textContent = value;
+}
+
 function bindSyncedInputs(id1, id2, isColor = false) {
   const el1 = document.getElementById(id1);
   const el2 = document.getElementById(id2);
@@ -142,6 +147,8 @@ function bindSyncedInputs(id1, id2, isColor = false) {
   
   el1.addEventListener('input', function() {
     el2.value = this.value;
+    updateRangeLabel(id1, this.value);
+    updateRangeLabel(id2, this.value);
     if (isColor) {
       const hexText = document.getElementById(id2 + '-hex');
       if (hexText) hexText.textContent = this.value.toUpperCase();
@@ -151,6 +158,8 @@ function bindSyncedInputs(id1, id2, isColor = false) {
   
   el2.addEventListener('input', function() {
     el1.value = this.value;
+    updateRangeLabel(id1, this.value);
+    updateRangeLabel(id2, this.value);
     if (isColor) {
       const hexText = document.getElementById(id1 + '-hex');
       if (hexText) hexText.textContent = this.value.toUpperCase();
@@ -169,6 +178,12 @@ document.addEventListener('DOMContentLoaded', () => {
   bindSyncedInputs('upload-sync-offset', 'sync-offset');
   bindSyncedInputs('upload-word-spacing', 'word-spacing');
   bindSyncedInputs('upload-bg-padding', 'bg-padding');
+
+  // Initialize all range labels
+  ['upload-bg-opacity', 'upload-word-spacing', 'upload-bg-padding', 'bg-opacity', 'word-spacing', 'bg-padding'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) updateRangeLabel(id, el.value);
+  });
 });
 
 // ==================== Color Pickers Casing & Live Updates ====================
