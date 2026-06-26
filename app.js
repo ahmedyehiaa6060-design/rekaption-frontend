@@ -369,6 +369,18 @@ function updateActiveSegment(time) {
         card.classList.remove('active');
       }
     });
+
+    // Trigger slide-up animation on active segment change if animation is 'slide'
+    const overlayContainer = document.getElementById('live-caption-overlay');
+    if (overlayContainer) {
+      if (selectedAnimation === 'slide') {
+        overlayContainer.classList.remove('slide-up-segment');
+        void overlayContainer.offsetWidth; // force reflow to restart animation
+        overlayContainer.classList.add('slide-up-segment');
+      } else {
+        overlayContainer.classList.remove('slide-up-segment');
+      }
+    }
   }
   
   // Update live caption overlay with adjusted time
@@ -439,7 +451,7 @@ function updateLiveCaptionOverlay(time) {
     let opacity = 1;
     let transitionStr = 'none';
     
-    if (selectedAnimation === 'slide') {
+    if (selectedAnimation === 'reveal') {
       if (isWordActive || isPast) {
         translateY = 0;
         opacity = 1;
