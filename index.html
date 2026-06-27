@@ -350,20 +350,20 @@
       </div>
     </div>
 
-    <!-- Advanced Settings Collapsible - Hidden -->
-    <!--
-    <div style="text-align:center;margin-top:30px">
-      <button class="btn-link" onclick="toggleAdvanced()">عرض الإعدادات المتقدمة ⚙️</button>
+    <!-- Advanced Settings Collapsible - Hidden visually but kept in DOM to avoid JS errors -->
+    <div style="display: none;">
+      <div style="text-align:center;margin-top:30px">
+        <button class="btn-link" onclick="toggleAdvanced()">عرض الإعدادات المتقدمة ⚙️</button>
+      </div>
+      
+      <div id="advanced-panel" class="advanced-card hidden">
+        <label class="control-label" style="display:block;margin-bottom:8px">رابط خادم الباك إند (Backend API URL):</label>
+        <input type="text" id="api-url" placeholder="https://username-rekaption.hf.space" style="direction:ltr;text-align:left;font-family:monospace" />
+        <span style="font-size:11px;color:var(--text-muted);display:block;margin-top:6px">
+          ضع رابط Hugging Face Space الخاص بك هنا (سينتهي بـ .hf.space) ليتم توجيه الطلبات إليه.
+        </span>
+      </div>
     </div>
-    
-    <div id="advanced-panel" class="advanced-card hidden">
-      <label class="control-label" style="display:block;margin-bottom:8px">رابط خادم الباك إند (Backend API URL):</label>
-      <input type="text" id="api-url" placeholder="https://username-rekaption.hf.space" style="direction:ltr;text-align:left;font-family:monospace" />
-      <span style="font-size:11px;color:var(--text-muted);display:block;margin-top:6px">
-        ضع رابط Hugging Face Space الخاص بك هنا (سينتهي بـ .hf.space) ليتم توجيه الطلبات إليه.
-      </span>
-    </div>
-    -->
 
   </div>
 
