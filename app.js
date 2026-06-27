@@ -2,7 +2,8 @@
 let audioFile = null;
 let leftLogoFile = null;
 let rightLogoFile = null;
-let selectedAnimation = 'classic';
+let selectedAnimation = 'reveal';
+let captionTop = 65;
 
 let transcribeData = null; // Holds the JSON returned from /api/transcribe
 let activeSegmentIndex = -1;
@@ -132,6 +133,17 @@ window.selectAnimation = function(el) {
   if (uploadCard) {
     document.querySelectorAll('.upload-anim-card').forEach(c => c.classList.remove('selected'));
     uploadCard.classList.add('selected');
+  }
+};
+
+window.updateCaptionTop = function(val) {
+  captionTop = parseInt(val) || 65;
+  const valSpan = document.getElementById('caption-top-val');
+  if (valSpan) valSpan.textContent = `${captionTop}%`;
+  
+  const overlayContainer = document.getElementById('live-caption-overlay');
+  if (overlayContainer) {
+    overlayContainer.style.top = `${captionTop}%`;
   }
 };
 
@@ -315,7 +327,7 @@ function initMediaPlayer() {
   mediaHtml += `
     <div id="live-caption-overlay" class="hidden" style="
       position: absolute;
-      top: 50%;
+      top: ${captionTop}%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: max-content;
@@ -430,6 +442,7 @@ function updateLiveCaptionOverlay(time) {
   const isBgVisible = !removeBg && bgOpacity > 0;
   
   // Apply styles to overlay container dynamically
+  overlayContainer.style.top = `${captionTop}%`;
   overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
   overlayContainer.style.flexWrap = 'nowrap';
   overlayContainer.style.whiteSpace = 'nowrap';
@@ -752,7 +765,8 @@ window.renderVideo = async function() {
     syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20,
     wordSpacing: parseInt(document.getElementById('word-spacing').value) || 31,
     bgPadding: parseInt(document.getElementById('bg-padding').value) || 8,
-    showBg: !document.getElementById('show-bg').checked
+    showBg: !document.getElementById('show-bg').checked,
+    captionTop: captionTop
   };
   
   try {

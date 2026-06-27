@@ -235,8 +235,30 @@
       <div class="editor-workspace">
         <!-- Left Column: Media Player & Render Trigger -->
         <div class="workspace-left">
-          <div id="preview-wrapper" class="preview-media-wrapper">
-            <!-- Video and Audio elements will be injected here dynamically -->
+          <div style="display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%;">
+            <!-- Vertical Slider for Caption Position -->
+            <div class="vertical-slider-container" style="display: flex; flex-direction: column; align-items: center; gap: 10px; background: rgba(14, 12, 24, 0.4); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 15px 10px; align-self: stretch; justify-content: center;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; writing-mode: vertical-lr; transform: rotate(180deg);">
+                ارتفاع الكابشن ↕️
+              </span>
+              <input 
+                type="range" 
+                id="caption-top-slider"
+                min="10" 
+                max="90" 
+                value="65" 
+                oninput="updateCaptionTop(this.value)"
+                orient="vertical"
+                style="width: 12px; height: 200px; cursor: pointer; accent-color: var(--purple-accent);"
+              />
+              <span id="caption-top-val" style="font-size: 11px; color: var(--purple-accent); font-weight: bold; font-family: monospace;">
+                65%
+              </span>
+            </div>
+
+            <div id="preview-wrapper" class="preview-media-wrapper">
+              <!-- Video and Audio elements will be injected here dynamically -->
+            </div>
           </div>
           
           <!-- Styling & Appearance Controls (In-Editor) -->
@@ -247,11 +269,11 @@
             <div class="control-field" style="margin-bottom: 15px;">
               <span class="control-label" style="font-size: 11px;">حركة الكابشن</span>
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px;">
-                <div class="anim-card selected" data-anim="classic" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+                <div class="anim-card" data-anim="classic" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
                   <span style="font-size: 14px;">📝</span>
                   <span style="display:block; font-weight:600; margin-top:4px;">Classic</span>
                 </div>
-                <div class="anim-card" data-anim="reveal" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
+                <div class="anim-card selected" data-anim="reveal" onclick="selectAnimation(this)" style="padding: 8px; font-size: 11px;">
                   <span style="font-size: 14px;">✨</span>
                   <span style="display:block; font-weight:600; margin-top:4px;">Reveal</span>
                 </div>
