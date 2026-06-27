@@ -477,7 +477,6 @@ function updateLiveCaptionOverlay(time) {
 
   if (isNewSegment) {
     overlayContainer.setAttribute('data-rendered-key', styleKey);
-    
     let html = '';
     segment.words.forEach(w => {
       const isWordActive = time >= w.start && time <= w.end;
@@ -487,6 +486,7 @@ function updateLiveCaptionOverlay(time) {
       let translateY = 0;
       let opacity = 1;
       let transitionStr = 'none';
+      let unit = 'px';
       
       if (selectedAnimation === 'reveal') {
         if (isWordActive || isPast) {
@@ -498,17 +498,33 @@ function updateLiveCaptionOverlay(time) {
           opacity = 0;
           transitionStr = 'none';
         }
+      } else if (selectedAnimation === 'slide') {
+        unit = '%';
+        if (isWordActive || isPast) {
+          translateY = 0;
+          opacity = 1;
+          transitionStr = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out';
+        } else {
+          translateY = 100;
+          opacity = 0;
+          transitionStr = 'none';
+        }
       }
       
-      const transformStr = `transform: translateY(${translateY}px);`;
+      const transformStr = `transform: translateY(${translateY}${unit});`;
       const opacityStr = `opacity: ${opacity};`;
       const transitionStyleStr = `transition: ${transitionStr};`;
       
-      html += `<span class="caption-word" style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStyleStr}">${w.word}</span>`;
+      let wordHtml = `<span class="caption-word" style="color: ${color}; ${outlineStroke} display: inline-block; ${transformStr} ${opacityStr} ${transitionStyleStr}">${w.word}</span>`;
+      
+      if (selectedAnimation === 'slide') {
+        html += `<span style="display: inline-block; overflow: hidden; vertical-align: bottom; height: 1.4em; padding-top: 0.1em;">${wordHtml}</span>`;
+      } else {
+        html += wordHtml;
+      }
     });
     
-    const innerClass = selectedAnimation === 'slide' ? 'slide-up-segment' : '';
-    overlayContainer.innerHTML = `<div class="${innerClass}" style="
+    overlayContainer.innerHTML = `<div style="
       display: flex;
       flex-wrap: nowrap;
       white-space: nowrap;
@@ -537,6 +553,18 @@ function updateLiveCaptionOverlay(time) {
             transitionStr = 'transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s ease-out';
           }
           span.style.transform = `translateY(${translateY}px)`;
+          span.style.opacity = opacity;
+          span.style.transition = transitionStr;
+        } else if (selectedAnimation === 'slide') {
+          let translateY = 100;
+          let opacity = 0;
+          let transitionStr = 'none';
+          if (isWordActive || isPast) {
+            translateY = 0;
+            opacity = 1;
+            transitionStr = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out';
+          }
+          span.style.transform = `translateY(${translateY}%)`;
           span.style.opacity = opacity;
           span.style.transition = transitionStr;
         }
