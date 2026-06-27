@@ -117,17 +117,15 @@
             </div>
           </div>
 
-          <!-- Show/Hide Background Toggle -->
           <div class="control-field" style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border-subtle);">
             <input 
               type="checkbox" 
               id="upload-show-bg"
-              checked
               style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--purple-accent);"
               onchange="syncShowBg(this)"
             />
             <label for="upload-show-bg" style="font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-main); user-select: none;">
-              خلفية الكلام 🔲
+              إزالة خلفية الكلام 🔲
             </label>
           </div>
 
@@ -190,9 +188,6 @@
           <div class="spinner"></div>
           <h3 class="status-title">جاري معالجة مقطعك...</h3>
           <p id="progress-msg" class="status-desc">جاري رفع الملفات وتحليل الصوت بالذكاء الاصطناعي...</p>
-          <div class="note-box" style="margin-top: 20px;">
-            ملاحظة: الرندرة والذكاء الاصطناعي يعملان على خادم Hugging Face مجاني بالكامل، يرجى الانتظار حتى الانتهاء.
-          </div>
         </div>
 
         <!-- 3. SUCCESS STATE -->
@@ -303,12 +298,11 @@
               <input 
                 type="checkbox" 
                 id="show-bg"
-                checked
                 style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--purple-accent);"
                 onchange="syncShowBg(this)"
               />
               <label for="show-bg" style="font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-main); user-select: none;">
-                خلفية الكلام 🔲
+                إزالة خلفية الكلام 🔲
               </label>
             </div>
 
@@ -356,7 +350,8 @@
       </div>
     </div>
 
-    <!-- Advanced Settings Collapsible -->
+    <!-- Advanced Settings Collapsible - Hidden -->
+    <!--
     <div style="text-align:center;margin-top:30px">
       <button class="btn-link" onclick="toggleAdvanced()">عرض الإعدادات المتقدمة ⚙️</button>
     </div>
@@ -368,6 +363,7 @@
         ضع رابط Hugging Face Space الخاص بك هنا (سينتهي بـ .hf.space) ليتم توجيه الطلبات إليه.
       </span>
     </div>
+    -->
 
   </div>
 

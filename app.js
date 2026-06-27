@@ -426,8 +426,8 @@ function updateLiveCaptionOverlay(time) {
   const bgOpacity = parseFloat(document.getElementById('bg-opacity').value) || 86;
   const wordSpacing = parseFloat(document.getElementById('word-spacing').value) || 31;
   const bgPadding = parseFloat(document.getElementById('bg-padding').value) || 8;
-  const showBg = document.getElementById('show-bg').checked;
-  const isBgVisible = showBg && bgOpacity > 0;
+  const removeBg = document.getElementById('show-bg').checked;
+  const isBgVisible = !removeBg && bgOpacity > 0;
   
   // Apply styles to overlay container dynamically
   overlayContainer.style.fontSize = `${fontSize / 4.5}px`;
@@ -459,7 +459,7 @@ function updateLiveCaptionOverlay(time) {
     : 'text-shadow: 2px 2px 0px #000000, -2px -2px 0px #000000, 2px -2px 0px #000000, -2px 2px 0px #000000, 0px 4px 6px rgba(0, 0, 0, 0.8);';
 
   // React-style state key to avoid destroying the DOM and breaking slide-up transitions
-  const styleKey = `${activeSegmentIndex}_${selectedAnimation}_${fontSize}_${bgColor}_${bgOpacity}_${wordSpacing}_${bgPadding}_${showBg}_${activeColor}_${inactiveColor}`;
+  const styleKey = `${activeSegmentIndex}_${selectedAnimation}_${fontSize}_${bgColor}_${bgOpacity}_${wordSpacing}_${bgPadding}_${!removeBg}_${activeColor}_${inactiveColor}`;
   const isNewSegment = overlayContainer.getAttribute('data-rendered-key') !== styleKey;
 
   if (isNewSegment) {
@@ -752,7 +752,7 @@ window.renderVideo = async function() {
     syncOffset: parseFloat(document.getElementById('sync-offset').value) || 0.20,
     wordSpacing: parseInt(document.getElementById('word-spacing').value) || 31,
     bgPadding: parseInt(document.getElementById('bg-padding').value) || 8,
-    showBg: document.getElementById('show-bg').checked
+    showBg: !document.getElementById('show-bg').checked
   };
   
   try {
