@@ -25,7 +25,7 @@ const downloadLink = document.getElementById('download-link');
 const apiUrlInput = document.getElementById('api-url');
 
 // Load saved API URL
-apiUrlInput.value = localStorage.getItem('rekaption_api_url') || '';
+apiUrlInput.value = localStorage.getItem('rekaption_api_url') || 'https://ahmedyehia-rekaption.hf.space';
 apiUrlInput.addEventListener('input', function() {
   localStorage.setItem('rekaption_api_url', this.value);
 });
