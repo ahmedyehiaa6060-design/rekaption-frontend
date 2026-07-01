@@ -204,6 +204,10 @@
             <span>⬇️</span> تحميل مقطع الفيديو
           </a>
           
+          <button class="btn-secondary" onclick="downloadSRT()" style="margin-bottom:12px; border: 1px solid var(--purple-accent); background: rgba(139,92,246,0.1); color: var(--text-main); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span>⬇️</span> تحميل ملف الترجمة SRT 📄
+          </button>
+          
           <button class="btn-secondary" onclick="resetApp()">
             صناعة فيديو جديد 🔄
           </button>
@@ -360,9 +364,14 @@
             💡 <strong>نصيحة ذكية:</strong> يمكنك تشغيل المقطع والاستماع إليه. سيقوم المحرر بتحديد وتلوين الجملة الحالية تلقائياً باللون البنفسجي وتحريك السكرول معها! انقر على زر التشغيل 🎧 بجانب أي جملة للانتقال إليها مباشرة، واكتب في المربع لتعديل أي كلمة.
           </div>
           
-          <button type="button" id="render-btn" class="btn-primary" onclick="renderVideo()" style="padding: 16px; font-size: 16px;">
-            <span>🚀</span> رندرة وتوليد الفيديو النهائي
-          </button>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
+            <button type="button" id="render-btn" class="btn-primary" onclick="renderVideo()" style="padding: 16px; font-size: 15px; margin: 0;">
+              <span>🚀</span> رندرة وتوليد الفيديو
+            </button>
+            <button type="button" class="btn-secondary" onclick="downloadSRT()" style="padding: 16px; font-size: 15px; border: 1px solid var(--purple-accent); background: rgba(139,92,246,0.1); margin: 0; color: var(--text-main); font-weight: 600; cursor: pointer; border-radius: 12px; display: flex; alignItems: center; justifyContent: center; gap: 8px;">
+              <span>📄</span> تحميل الترجمة SRT
+            </button>
+          </div>
         </div>
         
         <!-- Right Column: SRT Scrollable Editor -->

@@ -422,12 +422,6 @@ function updateLiveCaptionOverlay(time) {
   
   const segment = transcribeData.segments[activeSegmentIndex];
   
-  // Respect silence / snooze
-  if (!isSpeaking(segment, time)) {
-    overlayContainer.classList.add('hidden');
-    return;
-  }
-  
   overlayContainer.classList.remove('hidden');
   const activeColor = document.getElementById('active-color').value;
   const inactiveColor = document.getElementById('inactive-color').value;
@@ -830,4 +824,34 @@ window.renderVideo = async function() {
     showState(errorState);
     errorMsg.textContent = err.message || 'فشل رندرة الفيديو. يرجى المحاولة مرة أخرى.';
   }
+};
+
+window.downloadSRT = function() {
+  if (!transcribeData || !transcribeData.segments) return;
+  
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    const milliseconds = Math.floor((seconds % 1) * 1000);
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')},${milliseconds.toString().padStart(3, '0')}`;
+  }
+  
+  let srtContent = '';
+  transcribeData.segments.forEach((seg, idx) => {
+    const startStr = formatTime(seg.start);
+    const endStr = formatTime(seg.end);
+    srtContent += `${idx + 1}\n${startStr} --> ${endStr}\n${seg.text}\n\n`;
+  });
+  
+  const blob = new Blob([srtContent.trim()], { type: 'text/srt;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'rekaption_subtitles.srt');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
