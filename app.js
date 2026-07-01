@@ -831,3 +831,39 @@ window.renderVideo = async function() {
     errorMsg.textContent = err.message || 'فشل رندرة الفيديو. يرجى المحاولة مرة أخرى.';
   }
 };
+
+// ==================== Download SRT ====================
+window.downloadSRT = function() {
+  if (!transcribeData || !transcribeData.segments) return;
+  
+  function formatTimeSRT(seconds) {
+    const hh = Math.floor(seconds / 3600);
+    const mm = Math.floor((seconds % 3600) / 60);
+    const ss = Math.floor(seconds % 60);
+    const ms = Math.floor((seconds - Math.floor(seconds)) * 1000);
+    
+    const hhStr = String(hh).padStart(2, '0');
+    const mmStr = String(mm).padStart(2, '0');
+    const ssStr = String(ss).padStart(2, '0');
+    const msStr = String(ms).padStart(3, '0');
+    
+    return `${hhStr}:${mmStr}:${ssStr},${msStr}`;
+  }
+  
+  let srtContent = '';
+  transcribeData.segments.forEach((seg, idx) => {
+    const startStr = formatTimeSRT(seg.start);
+    const endStr = formatTimeSRT(seg.end);
+    srtContent += `${idx + 1}\n${startStr} --> ${endStr}\n${seg.text}\n\n`;
+  });
+  
+  const blob = new Blob([srtContent], { type: 'text/srt;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'captions.srt');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
